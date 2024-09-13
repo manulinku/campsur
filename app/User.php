@@ -4,26 +4,63 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use HasRoles;
+    
+    // Especifica el nombre de la tabla en la base de datos
+    protected $table = 'CLIENTES';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    // Si la columna `CODIGO` es la clave primaria, especifica esto
+    protected $primaryKey = 'CODIGO';
+
+    // Laravel por defecto espera que las claves primarias sean auto-incrementales y de tipo entero.
+    // Si `CODIGO` no es auto-incremental, puedes especificarlo:
+    // public $incrementing = false;
+    
+    // Si `CODIGO` no es de tipo entero, especifica su tipo
+    // protected $keyType = 'string';
+
+    // Si la tabla no tiene columnas `created_at` y `updated_at`, desactiva los timestamps
+    public $timestamps = false;
+
+    // Especifica las columnas que pueden ser masivamente asignadas
     protected $fillable = [
-        'name', 'email', 'password',
+        'NOMBRE', 
+        'PAIS', 
+        'TIPOCLI',
+        'PUNTOVENTA', 
+        'AGENTE', 
+        'CODSEGURO', 
+        'SOLVENCIA', 
+        'RSOLICITADO', 
+        'RCONCEDIDO', 
+        'COD_UN', 
+        'CIF', 
+        'KMTOTAL', 
+        'KMFRONTERA', 
+        'PRKMINT',
+        'PASSWORD',
+        'role'
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
+    // Si utilizas `PASSWORD` para la autenticación, es posible que desees protegerlo
     protected $hidden = [
-        'password', 'remember_token',
+        'PASSWORD',
     ];
+
+    // Especifica el tipo de columna `PASSWORD` para ser gestionada correctamente (por ejemplo, bcrypt)
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['PASSWORD'] = bcrypt($password);
+    }
+
+    public function hasRole($role)
+    {
+        return $this->rol === $role;
+    }
+
+    // Resto del código del modelo...
 }
