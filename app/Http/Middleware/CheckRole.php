@@ -13,18 +13,16 @@ class CheckRole
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string  $role
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next)
     {
-        // Asumiendo que los usuarios autenticados son clientes
-        $user = Auth::user(); // o Auth::guard('clientes')->user() si es un guard específico
+        $user = Auth::user();
 
-        if ($user && $user->hasRole($role)) {
+        if ($user && $user->role === 'admin') {
             return $next($request);
         }
 
-        return redirect('/'); // Redirigir si no tiene el rol adecuado
+        return redirect('/')->with('error', 'You do not have admin access');
     }
 }

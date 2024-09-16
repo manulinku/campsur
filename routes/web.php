@@ -4,6 +4,12 @@ use Illuminate\Support\Facades\Route;
 
 // Página de inicio
 Route::get('/', function () {
+   if (Auth::check()) {
+        // Si el usuario está autenticado, redirige a la vista del menú
+        return redirect()->route('menu'); // Asegúrate de definir la ruta 'menu'
+    }
+
+    // Si el usuario no está autenticado, muestra la vista de login
     return view('Auth/login');
 });
 

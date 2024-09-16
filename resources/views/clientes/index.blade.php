@@ -2,8 +2,9 @@
 
 @section('content')
     <div class="container">
-        <h1>Lista de Clientes</h1>
-        <table class="table">
+        
+        <table class="table"  style="background-color: rgba(255, 255, 255, 0.9); border-radius: 10px;">
+            <h1 style="background-color: rgba(255, 255, 255, 0.9); border-radius: 5px;">Lista de Clientes</h1>
             <thead>
                 <tr>
                     <th>Código</th>
