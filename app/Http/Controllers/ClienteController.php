@@ -28,21 +28,18 @@ class ClienteController extends Controller
         $cliente = User::findOrFail($id);
 
         $validatedData = $request->validate([
-            'NOMBRE' => 'required|string|max:35',
-            'PAIS' => 'required|numeric|digits_between:1,4',
-            'TIPOCLI' => 'required|numeric|digits_between:1,4',
-            'PUNTOVENTA' => 'required|numeric|digits_between:1,4',
-            'AGENTE' => 'required|numeric|digits_between:1,4',
-            'CODSEGURO' => 'nullable|numeric',
-            'SOLVENCIA' => 'nullable|numeric',
-            'RSOLICITADO' => 'nullable|numeric',
-            'RCONCEDIDO' => 'nullable|numeric',
-            'COD_UN' => 'required|numeric|digits_between:1,4',
-            'CIF' => 'required|string|max:9',
-            'KMTOTAL' => 'required|numeric|digits_between:1,4',
-            'KMFRONTERA' => 'required|numeric|digits_between:1,4',
-            'PRKMINT' => 'required|numeric|digits_between:1,4',
+            'NOMBRE' => 'string|max:200',
+            'PAIS' => 'numeric|digits_between:1,11',
+            'TIPOPROV' => 'numeric|digits_between:1,11',
+            'PUNTOVENTA' => 'numeric|digits_between:1,11',
+            'COD_UN' => 'numeric|digits_between:1,11',
+            'CIF' => 'string|max:20',
+            'COD_UN2' => 'numeric|digits_between:1,11',
+            'KMTOTAL' => 'numeric|regex:/^\d{1,10}(\.\d{1,4})?$/',
+            'KMFRONTERA' => 'numeric|regex:/^\d{1,10}(\.\d{1,4})?$/',
+            'PRKMINT' => 'numeric|regex:/^\d{1,10}(\.\d{1,4})?$/',
             'PASSWORD' => 'string|min:9',
+            'role' => 'string|max:141',
         ]);
 
         if (!empty($request->PASSWORD)) {

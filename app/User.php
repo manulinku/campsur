@@ -11,7 +11,7 @@ class User extends Authenticatable
     use HasRoles;
     
     // Especifica el nombre de la tabla en la base de datos
-    protected $table = 'CLIENTES';
+    protected $table = 'PROVEEDORES';
 
     // Si la columna `CODIGO` es la clave primaria, especifica esto
     protected $primaryKey = 'CODIGO';
@@ -30,15 +30,11 @@ class User extends Authenticatable
     protected $fillable = [
         'NOMBRE', 
         'PAIS', 
-        'TIPOCLI',
-        'PUNTOVENTA', 
-        'AGENTE', 
-        'CODSEGURO', 
-        'SOLVENCIA', 
-        'RSOLICITADO', 
-        'RCONCEDIDO', 
+        'TIPOPROV',
+        'PUNTOVENTA',  
         'COD_UN', 
         'CIF', 
+        'COD_UN2',
         'KMTOTAL', 
         'KMFRONTERA', 
         'PRKMINT',

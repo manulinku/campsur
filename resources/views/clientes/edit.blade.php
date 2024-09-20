@@ -34,38 +34,13 @@
             </div>
 
             <div class="form-group">
-                <label for="TIPOCLI">&nbsp;Tipo de Cliente</label>
-                <input type="text" name="TIPOCLI" class="form-control" value="{{ $cliente->TIPOCLI }}">
+                <label for="TIPOCLI">&nbsp;Tipo de Poveedor</label>
+                <input type="text" name="TIPOCLI" class="form-control" value="{{ $cliente->TIPOPROV }}">
             </div>
 
             <div class="form-group">
                 <label for="PUNTOVENTA">&nbsp;Punto de Venta</label>
                 <input type="text" name="PUNTOVENTA" class="form-control" value="{{ $cliente->PUNTOVENTA }}">
-            </div>
-
-            <div class="form-group">
-                <label for="AGENTE">&nbsp;Agente</label>
-                <input type="text" name="AGENTE" class="form-control" value="{{ $cliente->AGENTE }}">
-            </div>
-
-            <div class="form-group">
-                <label for="CODSEGURO">&nbsp;Código de Seguro</label>
-                <input type="text" name="CODSEGURO" class="form-control" value="{{ $cliente->CODSEGURO }}">
-            </div>
-
-            <div class="form-group">
-                <label for="SOLVENCIA">&nbsp;Solvencia</label>
-                <input type="text" name="SOLVENCIA" class="form-control" value="{{ $cliente->SOLVENCIA }}">
-            </div>
-
-            <div class="form-group">
-                <label for="RSOLICITADO">&nbsp;R Solicitado</label>
-                <input type="text" name="RSOLICITADO" class="form-control" value="{{ $cliente->RSOLICITADO }}">
-            </div>
-
-            <div class="form-group">
-                <label for="RCONCEDIDO">&nbsp;R Concedido</label>
-                <input type="text" name="RCONCEDIDO" class="form-control" value="{{ $cliente->RCONCEDIDO }}">
             </div>
 
             <div class="form-group">
@@ -78,6 +53,11 @@
                 <input type="text" name="CIF" class="form-control" value="{{ $cliente->CIF }}">
             </div>
 
+            <div class="form-group">
+                <label for="COD_UN2">&nbsp;Código UN2</label>
+                <input type="text" name="COD_UN" class="form-control" value="{{ $cliente->COD_UN2 }}">
+            </div>
+             
             <div class="form-group">
                 <label for="KMTOTAL">&nbsp;KM Total</label>
                 <input type="text" name="KMTOTAL" class="form-control" value="{{ $cliente->KMTOTAL }}">

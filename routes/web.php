@@ -24,6 +24,10 @@ Auth::routes();
 Route::middleware('auth')->group(function () {
 // Ruta para el dashboard o página de inicio después de login
     Route::get('/menu', 'HomeController@index')->name('menu');
+    Route::get('/albaranes', 'HomeController@albaranes')->name('albaranes');
+    Route::get('/albaranes/{NUMERO}', 'HomeController@mostrarAlbaran')->name('mostrarAlbaran');
+    Route::get('/facturas', 'HomeController@facturas')->name('facturas');
+    Route::get('/facturas/{NUMERO}', 'HomeController@mostrarFactura')->name('mostrarFactura');
 });    
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

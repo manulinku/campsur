@@ -29,8 +29,14 @@
         }
         .dropdown-item:hover {
             color: white !important; /* Color al pasar el ratón por encima */
+            /* left: -20px !important */
         }
-    </style>
+        @media (max-width: 576px) {
+            .nav-item {
+                left: -20px !important; /* Ajusta este valor según el desplazamiento necesario */
+            }
+            
+        }
     </style>
 </head>
 <body>

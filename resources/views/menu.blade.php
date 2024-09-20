@@ -17,10 +17,10 @@
             </li>
             @endif
             <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Albaranes</a>
+                <a href="{{ route('albaranes') }}" class="btn btn-primary btn-lg w-100">Albaranes</a>
             </li>
             <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Facturas</a>
+                <a href="{{ route('facturas') }}" class="btn btn-primary btn-lg w-100">Facturas</a>
             </li>
             <li class="nav-item mb-3">
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Facturas Cargo</a>
@@ -36,9 +36,6 @@
             </li>
             <li class="nav-item mb-3">
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Notificaciones</a>
-            </li>
-            <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Cajas y Palets</a>
             </li>
             <li class="nav-item mb-3">
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Previsiones de Corte</a>
