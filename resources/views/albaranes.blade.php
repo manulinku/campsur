@@ -3,7 +3,7 @@
 
 <div class="container my-4 p-4" style="color:black; background-color: white; border-radius: 1em;">
     @foreach($albaranesPorProveedor as $codigo => $albaranes)
-        <h1 class="h4">Albaranes del Proveedor: {{ $albaranes->first()->proveedor->NOMBRE }}</h1>
+    <h1 class="h4">Albaranes del Proveedor: {{ $albaranes->first()->proveedor ? $albaranes->first()->proveedor->NOMBRE : 'Proveedor no disponible' }}</h1>
         
         <div class="table-responsive">
             <table class="table table-hover">

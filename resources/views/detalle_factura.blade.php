@@ -5,7 +5,7 @@
     @if ($user && ($user->role === 'admin' || $user->CODIGO === $factura->COD_PROV))
         <h1 class="h4">Detalles de la Factura: {{ $factura->SERIEFAC }} - {{ $factura->NUMFAC }}</h1>
         <h2 class="h6">Fecha de la Factura Asociada: {{$factura->FECHA}}</h2>
-        <p>Proveedor: {{ $user->NOMBRE }}</p>
+        <p>Proveedor: {{ $factura->proveedor ? $factura->proveedor->NOMBRE : 'Proveedor no disponible' }}
         
         <!-- Mostrar las líneas asociadas al albarán de esta factura -->
         <div class="table-responsive">
@@ -20,7 +20,7 @@
                         <th>BULTOS</th>
                         <th>NETO</th>
                         <th>PRECIO</th>
-                        <th>TP</th>
+                        {{-- <th>TP</th> Es el tipo de peso en este caso k de KG --}}
                         <th>IMPORTE</th>
                     </tr>
                 </thead>
@@ -42,7 +42,7 @@
                         <td>{{ $linea->BULTOS }}</td>
                         <td>{{ number_format($linea->CANTIDAD, 2, ',', '.') }}</td>
                         <td>{{ number_format($linea->PRECIO, 2, ',', '.') }}</td>
-                        <td>{{ $linea->TP }}</td>
+                        {{-- <td>{{ $linea->TP }}</td> --}}
                         <td>{{ number_format($linea->IMPORTEEUR, 2, ',', '.') }}</td>
                     </tr>
                     
@@ -57,32 +57,45 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="4" class="text-end fw-bold">Suma:</td>
-                        <td>{{ number_format($totalPalets, 2, ',', '.') }}</td>
-                        <td>{{ number_format($totalBultos, 0, ',', '.') }}</td>
-                        <td>{{ number_format($totalNeto, 2, ',', '.') }}</td>
+                        
+                        <td colspan="4" class="text-end fw-bold"><b>SUMA:</b></td>  
+                        <td><b>{{ number_format($totalPalets, 2, ',', '.') }}</b></td>
+                        <td><b>{{ number_format($totalBultos, 0, ',', '.') }}</b></td>
+                        <td><b>{{ number_format($totalNeto, 2, ',', '.') }}</b></td>
                         <td></td>
-                        <td></td>
-                        <td>{{ number_format($totalImporte, 2, ',', '.') }}</td>
+                        {{-- <td></td> --}}
+                        <td><b>{{ number_format($totalImporte, 2, ',', '.') }}</b></td>
+                      
                     </tr>
                 </tfoot>
             </table>
         </div>
         <!-- Fila separada para IVA, DTO y TOTAL -->
-        <div class="mt-4">
-            <table class="table">
+        <div class="mt-4 table-responsive">
+            <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>IVA</th>
+                        
+                        <th>BRUTO</th>
+                        <th>% DTO</th>
                         <th>DTO</th>
-                        <th>TOTAL</th>
+                        <th>BASE IMPONIBLE</th>
+                        <th>% I.R.P.F.</th>
+                        <th>I.R.P.F.</th>
+                        <th>IVA</th>
+                        <th>TOTAL FACTURA (EUR)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ number_format($iva, 2, ',', '.') }}</td>
+                        <td>{{ number_format($bruto, 2, ',', '.') }}</td>
+                        <td>{{ number_format($tasa_dto, 2, ',', '.') }}</td>
                         <td>{{ number_format($dto, 2, ',', '.') }}</td>
-                        <td>{{ number_format($total, 2, ',', '.') }}</td>
+                        <td>{{ number_format($base, 2, ',', '.') }}</td>
+                        <td>{{ number_format($tasa_irpf, 2, ',', '.') }}</td>
+                        <td>{{ number_format($irpf, 2, ',', '.') }}</td>
+                        <td>{{ number_format($iva, 2, ',', '.') }}</td>
+                        <td style="color: rgb(48, 209, 139);"><b><u>{{ number_format($total, 2, ',', '.') }}</b></u></td>
                     </tr>
                 </tbody>
             </table>

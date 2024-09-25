@@ -5,7 +5,7 @@
     @if ($user && ($user->role === 'admin' || $user->CODIGO === $albaran->COD_PROV))
         <h1 class="h4">Detalles del Albarán: {{$albaran->TIPO}} - {{$albaran->NUMERO}}</h1>
         <h2 class="h6">Fecha: {{$albaran->FECHA}}</h2>
-        <p>Proveedor: {{ $user->NOMBRE }}</p>
+        <p>Proveedor: {{ $albaran->proveedor ? $albaran->proveedor->NOMBRE : 'Proveedor no disponible' }}</p>
         
         <!-- Mostrar las líneas del albarán -->
         <div class="table-responsive">

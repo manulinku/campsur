@@ -42,7 +42,7 @@ class HomeController extends Controller
     public function mostrarAlbaran($NUMERO)
     {
         $usuario = Auth::user();
-        $albaran = Albaran::findOrFail($NUMERO);
+        $albaran = Albaran::with('proveedor')->findOrFail($NUMERO);
         $lineas = $albaran->lineas;
 
         return view('detalle_albaran', [
@@ -78,8 +78,13 @@ class HomeController extends Controller
     // Encuentra la factura por su NUMFAC
     $factura = Albaran::where('NUMFAC', $NUMERO)->firstOrFail(); // Asegúrate de que el campo sea correcto
 
-    $iva = $factura->IVA;
+    $bruto = $factura->BRUTO;
+    $tasa_dto = $factura->TDTO;
     $dto = $factura->DTO;
+    $base = $factura->BASE;
+    $tasa_irpf = $factura->TRET;
+    $irpf = $factura->RET;
+    $iva = $factura->IVA;
     $total = $factura->TOTALEUR;
 
     // Cargar las líneas del albarán asociado a la factura
@@ -88,10 +93,15 @@ class HomeController extends Controller
     return view('detalle_factura', [
         'factura' => $factura,
         'lineas' => $lineas,
-        'iva' => $iva,
-        'dto' => $dto,
+        'bruto'=> $bruto,
+        'tasa_dto'=> $tasa_dto ,
+        'dto'=> $dto ,
+        'base'=>$base ,
+        'tasa_irpf'=> $tasa_irpf,
+        'irpf' => $irpf, 
+        'iva'=> $iva ,
         'total' => $total,
-        'user' => $usuario,
+        'user' => $usuario
     ]);
     }
 }
