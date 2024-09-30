@@ -41,7 +41,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #30d18b !important;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #68BF11 !important;">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     CampSur
@@ -68,13 +68,13 @@
                                 <a class="nav-link dropdown-toggle btn btn-primary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: white !important;">
                                     {{ Auth::user()->NOMBRE }}
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #30d18b !important;">
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #68BF11 !important;">
+                                    <a class="dropdown-item btn btn-primary" href="{{ route('menu') }}">Menu</a>
                                     <a class="dropdown-item btn btn-primary" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         Cerrar Sesión
                                     </a>
-                                    <a class="dropdown-item btn btn-primary" href="{{ route('menu') }}">Menu</a>
                                 </div>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     {{ csrf_field() }}

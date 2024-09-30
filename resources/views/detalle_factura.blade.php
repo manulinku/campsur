@@ -95,7 +95,7 @@
                         <td>{{ number_format($tasa_irpf, 2, ',', '.') }}</td>
                         <td>{{ number_format($irpf, 2, ',', '.') }}</td>
                         <td>{{ number_format($iva, 2, ',', '.') }}</td>
-                        <td style="color: rgb(48, 209, 139);"><b><u>{{ number_format($total, 2, ',', '.') }}</b></u></td>
+                        <td style="color: #68BF11;"><b><u>{{ number_format($total, 2, ',', '.') }}</b></u></td>
                     </tr>
                 </tbody>
             </table>

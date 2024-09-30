@@ -20,26 +20,27 @@
                 <a href="{{ route('albaranes') }}" class="btn btn-primary btn-lg w-100">Albaranes</a>
             </li>
             <li class="nav-item mb-3">
+                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Previsiones de Corte</a>
+            </li>
+            <li class="nav-item mb-3">
+                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Estado de Envases</a>
+            </li>
+            {{-- <li class="nav-item mb-3">
                 <a href="{{ route('facturas') }}" class="btn btn-primary btn-lg w-100">Facturas</a>
-            </li>
-            <li class="nav-item mb-3">
+            </li> --}}
+            {{-- <li class="nav-item mb-3">
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Facturas Cargo</a>
-            </li>
-            <li class="nav-item mb-3">
+            </li> --}}
+            {{-- <li class="nav-item mb-3">
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Pagos</a>
-            </li>
-            <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Estadísticas</a>
-            </li>
-            <li class="nav-item mb-3">
+            </li> --}}
+            {{-- <li class="nav-item mb-3">
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Comunicaciones</a>
             </li>
             <li class="nav-item mb-3">
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Notificaciones</a>
-            </li>
-            <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Previsiones de Corte</a>
-            </li>
+            </li> --}}
+            
         </ul>
     </div>
 </nav>

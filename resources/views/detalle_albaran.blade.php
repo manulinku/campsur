@@ -19,9 +19,18 @@
                         <th>PALETS</th>
                         <th>BULTOS</th>
                         <th>PESO NETO (KG)</th>
+                        <th>PRECIO</th>
+                        <th>IMPORTE</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $totalPalets = 0;
+                        $totalBultos = 0;
+                        $totalNeto = 0;
+                        $totalImporte = 0;
+                    @endphp
+
                     @foreach($lineas as $linea)
                     <tr>
                         <td>{{ $linea->ARTICULO ? $linea->ARTICULO->DESCRIPCION : 'Descripción no disponible' }}</td>
@@ -31,9 +40,31 @@
                         <td>{{ number_format($linea->PALETS, 2, ',', '.') }}</td>
                         <td>{{ $linea->BULTOS }}</td>
                         <td>{{ number_format($linea->CANTIDAD, 2, ',', '.') }}</td> <!-- Cambié a PESO_NETO -->
+                        <td>{{ number_format($linea->PRECIO, 2, ',', '.') }}</td>
+                        <td>{{ number_format($linea->IMPORTEEUR, 2, ',', '.') }}</td>
                     </tr>
+
+                    @php
+                        // Sumar los valores
+                        $totalPalets += $linea->PALETS;
+                        $totalBultos += $linea->BULTOS;
+                        $totalNeto += $linea->CANTIDAD;
+                        $totalImporte += $linea->IMPORTEEUR;
+                    @endphp
                     @endforeach
                 </tbody>
+                <tfoot>
+                    <tr>
+                        
+                        <td colspan="4" class="text-end fw-bold"><b>SUMA:</b></td>  
+                        <td><b>{{ number_format($totalPalets, 2, ',', '.') }}</b></td>
+                        <td><b>{{ number_format($totalBultos, 0, ',', '.') }}</b></td>
+                        <td><b>{{ number_format($totalNeto, 2, ',', '.') }}</b></td>
+                        <td></td>
+                        <td style="color: #68BF11;"><b><u>{{ number_format($totalImporte, 2, ',', '.') }}</u></b></td>
+                      
+                    </tr>
+                </tfoot>
             </table>
         </div>
     @else
