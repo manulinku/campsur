@@ -4,13 +4,15 @@ use Illuminate\Support\Facades\Route;
 
 // Página de inicio
 Route::get('/', function () {
-   if (Auth::check()) {
-        // Si el usuario está autenticado, redirige a la vista del menú
-        return redirect()->route('menu'); // Asegúrate de definir la ruta 'menu'
-    }
+    // (IMPORTANTE CAMBIAR CUANDO ESTÉ EN PRODUCCIÓN)
+//    if (Auth::check()) {
+//         // Si el usuario está autenticado, redirige a la vista del menú
+//         return redirect()->route('menu'); // Asegúrate de definir la ruta 'menu'
+//     }
 
-    // Si el usuario no está autenticado, muestra la vista de login
-    return view('Auth/login');
+    // Si el usuario no está autenticado, muestra la vista de login (IMPORTANTE CAMBIAR CUANDO ESTÉ EN PRODUCCIÓN)
+    // return view('Auth/login');
+    return view('bienvenida');
 });
 
 // Otras rutas de la aplicación
@@ -28,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/albaranes/{NUMERO}', 'HomeController@mostrarAlbaran')->name('mostrarAlbaran');
     Route::get('/facturas', 'HomeController@facturas')->name('facturas');
     Route::get('/facturas/{NUMERO}', 'HomeController@mostrarFactura')->name('mostrarFactura');
+    Route::get('/movimientos/{codigo_proveedor}', 'HomeController@mostrarMovimientos')->name('movimientos.envase.palet');
 });    
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
