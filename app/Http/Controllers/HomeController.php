@@ -7,6 +7,7 @@ use App\Albaran;
 use App\Factura;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -16,9 +17,18 @@ class HomeController extends Controller
     }
 
     public function index()
-    {
-        return view('menu');
+{
+    $user = Auth::user(); // Obtiene el usuario logueado
+
+    // Si el usuario tiene un rol de 'user', obtener el proveedor correspondiente
+    if ($user->role === 'user') {
+        $codigo_proveedor = $user->CODIGO; // Asigna el código del proveedor
+    } else {
+        $codigo_proveedor = null; // O puedes asignar un valor por defecto o null
     }
+
+    return view('menu', compact('codigo_proveedor'));
+}
 
     public function albaranes()
     {
@@ -104,4 +114,45 @@ class HomeController extends Controller
         'user' => $usuario
     ]);
     }
+
+//     public function mostrarMovimientos($codigo_proveedor)
+// {
+//     // Obtener el proveedor
+//     $proveedor = User::where('CODIGO', $codigo_proveedor)->first();
+
+//     // Obtener movimientos de envases
+//     $movimientosEnvases = DB::table('ENVASES as e')
+//         ->leftJoin('LIN_ENV_PROV as lep', 'e.CODIGO', '=', 'lep.CODIGO')
+//         ->leftJoin('ALBARAN_PROV as ap', 'lep.NUMERO', '=', 'ap.NUMERO')
+//         ->select(
+//             'e.CODIGO',
+//             'e.DESCRIPCION',
+//             DB::raw('SUM(CASE WHEN lep.ENTREGA = 1 THEN lep.CANTIDAD ELSE 0 END) as TOTAL_ENTREGA'),
+//             DB::raw('SUM(CASE WHEN lep.RETIRA = 1 THEN lep.CANTIDAD ELSE 0 END) as TOTAL_RETIRA')
+//         )
+//         ->where('ap.COD_PROV', $codigo_proveedor)
+//         ->groupBy('e.CODIGO', 'e.DESCRIPCION')
+//         ->get();
+
+//     // Obtener movimientos de palets
+//     $movimientosPalets = DB::table('PALETS as p')
+//         ->leftJoin('LIN_ENV_PROV as lep', 'p.CODIGO', '=', 'lep.CODIGO')
+//         ->leftJoin('ALBARAN_PROV as ap', 'lep.NUMERO', '=', 'ap.NUMERO')
+//         ->select(
+//             'p.CODIGO',
+//             'p.DESCRIPCION',
+//             DB::raw('SUM(CASE WHEN lep.ENTREGA = 1 THEN lep.CANTIDAD ELSE 0 END) as TOTAL_ENTREGA'),
+//             DB::raw('SUM(CASE WHEN lep.RETIRA = 1 THEN lep.CANTIDAD ELSE 0 END) as TOTAL_RETIRA')
+//         )
+//         ->where('ap.COD_PROV', $codigo_proveedor)
+//         ->groupBy('p.CODIGO', 'p.DESCRIPCION')
+//         ->get();
+
+//     return view('movimientos_envase_palet', compact('movimientosEnvases', 'movimientosPalets', 'proveedor'));
+// }
+
+//     public function PrevisionesCorte(){
+        
+//     }
+
 }
