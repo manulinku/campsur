@@ -58,5 +58,15 @@ class User extends Authenticatable
         return $this->rol === $role;
     }
 
+    public function albaranes()
+    {
+        return $this->hasMany(Albaran::class, 'COD_PROV', 'CODIGO');
+    }
+
+    public function previsiones()
+    {
+        return $this->hasMany(Prevision::class, 'COD_PROV', 'CODIGO');
+    }
+
     // Resto del código del modelo...
 }

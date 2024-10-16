@@ -21,15 +21,15 @@
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('CODIGO') ? ' has-error' : '' }}">
-                            <label for="CODIGO" class="col-md-4 control-label">Código de Cliente</label>
+                        <div class="form-group{{ $errors->has('CIF') ? ' has-error' : '' }}">
+                            <label for="CIF" class="col-md-4 control-label">CIF de Cliente</label>
 
                             <div class="col-md-6">
-                                <input id="CODIGO" type="text" class="form-control" name="CODIGO" value="{{ old('CODIGO') }}" required>
+                                <input id="CIF" type="text" class="form-control" name="CIF" value="{{ old('CIF') }}" required>
 
-                                @if ($errors->has('CODIGO'))
+                                @if ($errors->has('CIF'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('CODIGO') }}</strong>
+                                        <strong>{{ $errors->first('CIF') }}</strong>
                                     </span>
                                 @endif
                             </div>

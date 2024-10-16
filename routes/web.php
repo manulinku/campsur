@@ -31,6 +31,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/facturas', 'HomeController@facturas')->name('facturas');
     Route::get('/facturas/{NUMERO}', 'HomeController@mostrarFactura')->name('mostrarFactura');
     Route::get('/movimientos/{codigo_proveedor}', 'HomeController@mostrarMovimientos')->name('movimientos.envase.palet');
+    Route::get('/previsiones', 'HomeController@PrevisionesCorte')->name('previsionesCorte');
+
+    //Previsiones de corte
+    // Para ver las previsiones de corte
+    Route::get('/previsiones', 'PrevisionController@misPrevisiones')->name('previsionesCorte')->middleware('auth');
+    // Para mostrar el formulario de creación de una nueva previsión
+    Route::get('/previsiones/crear', 'PrevisionController@crearPrevision')->name('previsionesCrear')->middleware('auth');
+    // Para guardar una nueva previsión
+    Route::post('/previsiones', 'PrevisionController@guardarPrevision')->name('previsionesGuardar')->middleware('auth');
+    // Para editar una previsión existente
+    Route::get('/previsiones/{linea}/editar', 'PrevisionController@editarPrevision')->name('previsionesEditar')->middleware('auth');
+    // Para actualizar una previsión existente
+    Route::put('/previsiones/{linea}', 'PrevisionController@actualizarPrevision')->name('previsionesActualizar')->middleware('auth');
+    // Para eliminar una previsión
+    Route::delete('/previsiones/{linea}', 'PrevisionController@eliminarPrevision')->name('previsionesEliminar')->middleware('auth');
+
 });    
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

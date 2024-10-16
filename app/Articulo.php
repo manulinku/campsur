@@ -15,5 +15,9 @@ class Articulo extends Model
     {
         return $this->hasMany(LinAlbProv::class, 'CODIGO', 'COD_ART'); // Relación inversa
     }
+    public function previsiones()
+    {
+        return $this->hasMany(Prevision::class, 'COD_ART', 'CODIGO');
+    }
 }
 

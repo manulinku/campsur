@@ -23,18 +23,18 @@ class LoginController extends Controller
     // Definir que el campo de usuario es 'CODIGO'
     protected function username()
     {
-        return 'CODIGO';
+        return 'CIF';
     }
 
     // Modificar el método de autenticación para omitir el hash
     protected function credentials(Request $request)
     {
-        // Recuperar el usuario por el código
-        $user = User::where('CODIGO', $request->input('CODIGO'))->first();
+        // Recuperar el usuario por el CIF
+        $user = User::where('CIF', $request->input('CIF'))->first();
 
         // Si el usuario existe y la contraseña coincide (sin hash)
         if ($user && $user->PASSWORD === $request->input('PASSWORD')) {
-            return $request->only('CODIGO', 'PASSWORD');
+            return $request->only('CIF', 'PASSWORD');
         }
 
         // Si las credenciales no coinciden, devolvemos un array vacío
@@ -45,19 +45,19 @@ class LoginController extends Controller
     protected function sendFailedLoginResponse(Request $request)
     {
         return redirect()->back()
-            ->withInput($request->only('CODIGO', 'remember'))
+            ->withInput($request->only('CIF', 'remember'))
             ->withErrors([
-                'CODIGO' => 'Las credenciales no son correctas.',  // Mensaje personalizado
+                'CIF' => 'Las credenciales no son correctas.',  // Mensaje personalizado
             ]);
     }
 
     // Iniciar sesión manualmente (puedes usar este método si no funciona el anterior)
     public function login(Request $request)
     {
-        $credentials = $request->only('CODIGO', 'PASSWORD');
+        $credentials = $request->only('CIF', 'PASSWORD');
 
         // Buscar usuario por código y verificar contraseña sin hash
-        $user = User::where('CODIGO', $credentials['CODIGO'])->first();
+        $user = User::where('CIF', $credentials['CIF'])->first();
         
         if ($user && Hash::check($credentials['PASSWORD'], $user->PASSWORD)) {
             Auth::login($user);
