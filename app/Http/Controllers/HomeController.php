@@ -115,44 +115,55 @@ class HomeController extends Controller
     ]);
     }
 
-//     public function mostrarMovimientos($codigo_proveedor)
-// {
-//     // Obtener el proveedor
-//     $proveedor = User::where('CODIGO', $codigo_proveedor)->first();
+    public function mostrarMovimientos($codigo_proveedor)
+{
+    $proveedor = User::where('CODIGO', $codigo_proveedor)->first();
 
-//     // Obtener movimientos de envases
-//     $movimientosEnvases = DB::table('ENVASES as e')
-//         ->leftJoin('LIN_ENV_PROV as lep', 'e.CODIGO', '=', 'lep.CODIGO')
-//         ->leftJoin('ALBARAN_PROV as ap', 'lep.NUMERO', '=', 'ap.NUMERO')
-//         ->select(
-//             'e.CODIGO',
-//             'e.DESCRIPCION',
-//             DB::raw('SUM(CASE WHEN lep.ENTREGA = 1 THEN lep.CANTIDAD ELSE 0 END) as TOTAL_ENTREGA'),
-//             DB::raw('SUM(CASE WHEN lep.RETIRA = 1 THEN lep.CANTIDAD ELSE 0 END) as TOTAL_RETIRA')
-//         )
-//         ->where('ap.COD_PROV', $codigo_proveedor)
-//         ->groupBy('e.CODIGO', 'e.DESCRIPCION')
-//         ->get();
+    // Primero, agrupamos los datos de LIN_ENV_PROV para obtener los retiros y entregas
+    $movimientos = DB::table('LIN_ENV_PROV as lep')
+        ->select(
+            'lep.TE', // Agregamos TE aquí para usarlo en el mapeo
+            'lep.CODIGO', // Agregamos CODIGO aquí
+            DB::raw("CASE WHEN lep.TE = 'E' THEN e.DESCRIPCION ELSE p.DESCRIPCION END AS DESCRIPCION"),
+            DB::raw('SUM(COALESCE(lep.RETIRA, 0)) as TOTAL_RETIRA'),
+            DB::raw('SUM(COALESCE(lep.ENTREGA, 0)) as TOTAL_ENTREGA')
+        )
+        ->leftJoin('ENVASES as e', function ($join) {
+            $join->on('lep.CODIGO', '=', 'e.CODIGO')
+                ->where('lep.TE', '=', 'E');
+        })
+        ->leftJoin('PALETS as p', function ($join) {
+            $join->on('lep.CODIGO', '=', 'p.CODIGO')
+                ->where('lep.TE', '=', 'P');
+        })
+        // Unimos con ENVASES_PROV para obtener COD_PROV
+        ->join('ENVASES_PROV as ep', 'lep.NUMERO', '=', 'ep.NUMERO')
+        ->where('ep.COD_PROV', $codigo_proveedor) // Filtrar por el proveedor
+        ->groupBy('lep.TE', 'lep.CODIGO', 'DESCRIPCION') // Aseguramos que agrupamos por TE y CODIGO
+        ->get();
 
-//     // Obtener movimientos de palets
-//     $movimientosPalets = DB::table('PALETS as p')
-//         ->leftJoin('LIN_ENV_PROV as lep', 'p.CODIGO', '=', 'lep.CODIGO')
-//         ->leftJoin('ALBARAN_PROV as ap', 'lep.NUMERO', '=', 'ap.NUMERO')
-//         ->select(
-//             'p.CODIGO',
-//             'p.DESCRIPCION',
-//             DB::raw('SUM(CASE WHEN lep.ENTREGA = 1 THEN lep.CANTIDAD ELSE 0 END) as TOTAL_ENTREGA'),
-//             DB::raw('SUM(CASE WHEN lep.RETIRA = 1 THEN lep.CANTIDAD ELSE 0 END) as TOTAL_RETIRA')
-//         )
-//         ->where('ap.COD_PROV', $codigo_proveedor)
-//         ->groupBy('p.CODIGO', 'p.DESCRIPCION')
-//         ->get();
+    // Ahora hacemos un segundo paso para obtener los datos de LIN_ALB_PROV
+    $movimientos->map(function ($item) use ($codigo_proveedor) {
+        // Hacemos la suma de bultos o palets según el tipo
+        $totalEntregaAdicional = DB::table('LIN_ALB_PROV as lap')
+            ->where(function ($query) use ($item) {
+                if ($item->TE === 'E') {
+                    $query->where('lap.COD_ENV', '=', $item->CODIGO);
+                } else if ($item->TE === 'P') {
+                    $query->where('lap.COD_PAL', '=', $item->CODIGO);
+                }
+            })
+            ->sum(DB::raw('CASE WHEN ' . ($item->TE === 'E' ? 'lap.BULTOS' : 'lap.PALETS') . ' IS NOT NULL THEN ' . ($item->TE === 'E' ? 'lap.BULTOS' : 'lap.PALETS') . ' ELSE 0 END'));
 
-//     return view('movimientos_envase_palet', compact('movimientosEnvases', 'movimientosPalets', 'proveedor'));
-// }
+        $item->TOTAL_ENTREGA += $totalEntregaAdicional; // Sumar entrega adicional
+        return $item;
+    });
 
-//     public function PrevisionesCorte(){
-        
-//     }
+    return view('movimientos_envase_palet', compact('movimientos', 'proveedor'));
+}
+
+
+
+
 
 }
