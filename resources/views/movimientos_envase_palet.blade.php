@@ -12,7 +12,7 @@
                         <th>Descripción</th>
                         <th>Total Entregas</th>
                         <th>Total Retiros</th>
-                        
+                        <th>Saldo</th> {{-- Nueva columna Saldo --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -21,7 +21,7 @@
                             <td>{{ $movimiento->DESCRIPCION }}</td>
                             <td>{{ number_format($movimiento->TOTAL_ENTREGA, 0, ',', '.') }}</td>
                             <td>{{ number_format($movimiento->TOTAL_RETIRA, 0, ',', '.') }}</td>
-                            
+                            <td>{{ number_format($movimiento->TOTAL_ENTREGA - $movimiento->TOTAL_RETIRA, 0, ',', '.') }}</td> {{-- Cálculo del Saldo --}}
                         </tr>
                     @endforeach
                 </tbody>
