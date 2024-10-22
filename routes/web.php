@@ -28,10 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/menu', 'HomeController@index')->name('menu');
     Route::get('/albaranes', 'HomeController@albaranes')->name('albaranes');
     Route::get('/albaranes/{NUMERO}', 'HomeController@mostrarAlbaran')->name('mostrarAlbaran');
-    Route::get('/facturas', 'HomeController@facturas')->name('facturas');
-    Route::get('/facturas/{NUMERO}', 'HomeController@mostrarFactura')->name('mostrarFactura');
     Route::get('/movimientos/{codigo_proveedor}', 'HomeController@mostrarMovimientos')->name('movimientos.envase.palet');
-    Route::get('/previsiones', 'HomeController@PrevisionesCorte')->name('previsionesCorte');
+
+    //En caso de que se quieran facturas
+    // Route::get('/facturas', 'HomeController@facturas')->name('facturas');
+    // Route::get('/facturas/{NUMERO}', 'HomeController@mostrarFactura')->name('mostrarFactura');
 
     //Previsiones de corte
     // Para ver las previsiones de corte
