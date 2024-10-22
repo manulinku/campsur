@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '70c6451c6f3cbac3ed24fe67cf68108bfe5ee445',
+        'reference' => 'bedb1c42b58c24f6dad2770a7deb6373c9148eff',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -334,7 +334,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '70c6451c6f3cbac3ed24fe67cf68108bfe5ee445',
+            'reference' => 'bedb1c42b58c24f6dad2770a7deb6373c9148eff',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -709,6 +709,15 @@
             'install_path' => __DIR__ . '/../sebastian/version',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'spatie/laravel-cookie-consent' => array(
+            'pretty_version' => '2.11.0',
+            'version' => '2.11.0.0',
+            'reference' => 'c083a33627b556ea060b64594cbbeeedb4311901',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-cookie-consent',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'spatie/laravel-permission' => array(
             'pretty_version' => '2.38.0',
