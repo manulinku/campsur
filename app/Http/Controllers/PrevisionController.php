@@ -12,18 +12,26 @@ use Auth;
     // Mostrar las previsiones del proveedor logueado
     public function misPrevisiones()
     {
-    $user = auth()->user();
-    $rol = $user->role; // Suponiendo que el campo se llama 'role'
+        $user = auth()->user();
+        $rol = $user->role; // Suponiendo que el campo se llama 'role'
 
-    if ($rol === 'admin') {
-        // Obtener todas las previsiones agrupadas por proveedor
-        $previsiones = Prevision::with('articulo', 'proveedor')->get()->groupBy('COD_PROV');
-    } else {
-        // Si no es usuario, solo mostrar sus previsiones
-        $previsiones = Prevision::where('COD_PROV', $user->CODIGO)->with('articulo')->get();
-    }
+        // Obtener la fecha actual y restar 15 días
+        $fechaLimite = now()->subDays(15);
 
-    return view('previsiones.index', compact('previsiones'));
+        if ($rol === 'admin') {
+            // Obtener todas las previsiones de los últimos 15 días agrupadas por proveedor
+            $previsiones = Prevision::with('articulo', 'proveedor')
+                ->where('FECHA', '>=', $fechaLimite)
+                ->get()
+                ->groupBy('COD_PROV');
+        } else {
+            // Si no es usuario, solo mostrar sus previsiones de los últimos 15 días
+            $previsiones = Prevision::where('COD_PROV', $user->CODIGO)
+                ->where('FECHA', '>=', $fechaLimite)
+                ->with('articulo')
+                ->get();
+        }
+        return view('previsiones.index', compact('previsiones'));
     }
 
 
