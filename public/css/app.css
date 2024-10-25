@@ -5344,8 +5344,8 @@ tbody.collapse.in {
 .container-fluid>.navbar-header,
 .container>.navbar-collapse,
 .container>.navbar-header {
-    margin-right: -15px;
-    margin-left: -15px
+    /* margin-right: -15px;
+    margin-left: -15px */
 }
 
 @media (min-width:768px) {
