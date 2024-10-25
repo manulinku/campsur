@@ -41,12 +41,11 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #68BF11 !important;">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: white !important;">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    CampSur
+                <a href="{{ url('/') }}" style="color:#046433">
+                    <img src="{{ asset('/images/logo.png') }}" alt="Logo" style="width: 60px;">
                 </a>
-
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#app-navbar-collapse" aria-controls="app-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -61,14 +60,14 @@
                         <!-- Right Side Of Navbar -->
                         @guest
                             <li class="nav-item">
-                                <span class="nav-link" style="color: white;">Inicie sesión para acceder a sus datos</span>
+                                <span class="nav-link" style="color: #046433;">Inicie sesión para acceder a sus datos<br>Horario de Almacén: L-V: 9:30-19:30 &nbsp;&nbsp;Sábados: 9:30-13:00</span>
                             </li>
                         @else
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle btn btn-primary" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: white !important;">
                                     {{ Auth::user()->NOMBRE }}
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #68BF11 !important;">
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="background-color: #046433 !important;">
                                     <a class="dropdown-item btn btn-primary" href="{{ route('menu') }}">Menu</a>
                                     <a class="dropdown-item btn btn-primary" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
@@ -81,6 +80,7 @@
                                 </form>
                             </li>
                         @endguest
+                        
                     </ul>
                 </div>
             </div>

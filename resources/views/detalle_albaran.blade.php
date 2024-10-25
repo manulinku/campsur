@@ -61,7 +61,7 @@
                         <td><b>{{ number_format($totalBultos, 0, ',', '.') }}</b></td>
                         <td><b>{{ number_format($totalNeto, 2, ',', '.') }}</b></td>
                         <td></td>
-                        <td style="color: #68BF11;"><b><u>{{ number_format($totalImporte, 2, ',', '.') }}</u></b></td>
+                        <td style="color: #046433;"><b><u>{{ number_format($totalImporte, 2, ',', '.') }}</u></b></td>
                       
                     </tr>
                 </tfoot>
