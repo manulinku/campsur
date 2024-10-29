@@ -13,26 +13,37 @@ use Auth;
     public function misPrevisiones()
     {
         $user = auth()->user();
-        $rol = $user->role; // Suponiendo que el campo se llama 'role'
+        $rol = $user->role;
 
         // Obtener la fecha actual y restar 15 días
         $fechaLimite = now()->subDays(15);
 
         if ($rol === 'admin') {
-            // Obtener todas las previsiones de los últimos 15 días agrupadas por proveedor
+            // Obtener todas las previsiones de los últimos 15 días, excluyendo las que tienen NOTAS = 'B' o están vacías
             $previsiones = Prevision::with('articulo', 'proveedor')
                 ->where('FECHA', '>=', $fechaLimite)
+                ->where(function ($query) {
+                    $query->where('NOTAS', '!=', 'B')
+                        ->orWhereNull('NOTAS') // También incluye registros donde NOTAS está vacía
+                        ->orWhere('NOTAS', ''); // Incluye registros donde NOTAS es una cadena vacía
+                })
                 ->get()
                 ->groupBy('COD_PROV');
         } else {
-            // Si no es usuario, solo mostrar sus previsiones de los últimos 15 días
+            // Obtener previsiones del usuario sin las que tienen NOTAS = 'B' o están vacías
             $previsiones = Prevision::where('COD_PROV', $user->CODIGO)
                 ->where('FECHA', '>=', $fechaLimite)
+                ->where(function ($query) {
+                    $query->where('NOTAS', '!=', 'B')
+                        ->orWhereNull('NOTAS')
+                        ->orWhere('NOTAS', '');
+                })
                 ->with('articulo')
                 ->get();
         }
         return view('previsiones.index', compact('previsiones'));
     }
+
 
 
     // Mostrar formulario para añadir previsión
@@ -63,58 +74,55 @@ use Auth;
 
     // Editar previsión existente
     public function editarPrevision($id)
-{
-    $prevision = Prevision::findOrFail($id);
+    {
+        $prevision = Prevision::findOrFail($id);
 
-    // Verificar si el proveedor autenticado es el propietario de la previsión
-    if ($prevision->COD_PROV !== auth()->user()->CODIGO) {
-        return redirect()->route('previsionesCorte')->with('error', 'No tienes permiso para editar esta previsión.');
+        // Verificar si el proveedor autenticado es el propietario de la previsión
+        if ($prevision->COD_PROV !== auth()->user()->CODIGO) {
+            return redirect()->route('previsionesCorte')->with('error', 'No tienes permiso para editar esta previsión.');
+        }
+
+        // Lógica para obtener los artículos y mostrar la vista de edición
+        $articulos = Articulo::all();
+        return view('previsiones.edit', compact('prevision', 'articulos'));
     }
-
-    // Lógica para obtener los artículos y mostrar la vista de edición
-    $articulos = Articulo::all();
-    return view('previsiones.edit', compact('prevision', 'articulos'));
-}
 
 
 
     // Actualizar previsión existente en la base de datos
-    public function actualizarPrevision(Request $request, $linea)
+    // Realmente hace un update, lo que conseguimos con esto es un borrado suave
+    public function borrarPrevision($linea)
     {
-    // Validar los datos recibidos
-    $request->validate([
-        'fecha' => 'required|date',
-        'cod_art' => 'required|exists:ARTICULOS,CODIGO',
-        'cantidad' => 'required|numeric|min:0',
-    ]);
+        // Buscar la previsión por LINEA
+        $prevision = Prevision::where('LINEA', $linea)->firstOrFail();
 
-    // Buscar la previsión por LINEA
-    $prevision = Prevision::where('LINEA', $linea)->firstOrFail();
+        // Modificar solo el campo NOTAS
+        $prevision->NOTAS = 'B';
+        
+        // Guardar los cambios
+        $prevision->save();
 
-    // Actualizar los campos
-    $prevision->FECHA = $request->input('fecha');
-    $prevision->COD_ART = $request->input('cod_art');
-    $prevision->CANTIDAD = $request->input('cantidad');
-    $prevision->save();
-
-    return redirect()->route('previsionesCorte')->with('success', 'Previsión actualizada correctamente.');
+        return redirect()->route('previsionesCorte')->with('success', 'Campo NOTAS actualizado correctamente.');
     }
 
 
-    // Eliminar previsión
-    public function eliminarPrevision($id)
-{
-    $prevision = Prevision::findOrFail($id);
 
-    // Verificar si el proveedor autenticado es el propietario de la previsión
-    if ($prevision->COD_PROV !== auth()->user()->CODIGO) {
-        return redirect()->route('previsionesCorte')->with('error', 'No tienes permiso para eliminar esta previsión.');
-    }
+    // Eliminar previsión 
+    //#### NO LO USAMOS PORQUE SE HA DE UTILIZAR UN BORRADO SUAVE EN LA BASE DE DATOS ###
+    //### CUANDO SE QUIERA BORRAR UN REGISTRO SE MODIFICARÁ EL CAMPO NOTAS DE LA TABLA DE PREVISIONES A UNA "B" ###
+//     public function eliminarPrevision($id)
+// {
+//     $prevision = Prevision::findOrFail($id);
 
-    // Eliminar la previsión
-    $prevision->delete();
-    return redirect()->route('previsionesCorte')->with('success', 'Previsión eliminada correctamente.');
-}
+//     // Verificar si el proveedor autenticado es el propietario de la previsión
+//     if ($prevision->COD_PROV !== auth()->user()->CODIGO) {
+//         return redirect()->route('previsionesCorte')->with('error', 'No tienes permiso para eliminar esta previsión.');
+//     }
+
+//     // Eliminar la previsión
+//     $prevision->delete();
+//     return redirect()->route('previsionesCorte')->with('success', 'Previsión eliminada correctamente.');
+// }
 
 
 }

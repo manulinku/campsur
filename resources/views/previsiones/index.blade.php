@@ -27,15 +27,10 @@
                                     <td>{{ $prevision->articulo->DESCRIPCION }}</td>
                                     <td>{{ number_format($prevision->CANTIDAD, 2, ',', '.') }}</td>
                                     <td>
-                                        <!-- Botón para editar la previsión -->
-                                        <a href="{{ route('previsionesEditar', $prevision->LINEA) }}" class="btn btn-warning">Editar</a>
-
-                                        <!-- Botón para eliminar la previsión -->
-                                        <form action="{{ route('previsionesEliminar', $prevision->LINEA) }}" method="POST" style="display:inline;">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta previsión?');">Eliminar</button>
-                                        </form>                                      
+                                        <!-- Botón para eliminar la previsión con confirmación -->
+                                        <a href="{{ route('previsionesEliminar', $prevision->LINEA) }}" 
+                                           class="btn btn-danger" 
+                                           onclick="return confirmDelete()">Borrar</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -65,15 +60,10 @@
                                     <td>{{ $prevision->articulo->DESCRIPCION }}</td>
                                     <td>{{ number_format($prevision->CANTIDAD, 2, ',', '.') }}</td>
                                     <td>
-                                        <!-- Botón para editar la previsión -->
-                                        <a href="{{ route('previsionesEditar', $prevision->LINEA) }}" class="btn btn-warning">Editar</a>
-
-                                        <!-- Botón para eliminar la previsión -->
-                                        <form action="{{ route('previsionesEliminar', $prevision->LINEA) }}" method="POST" style="display:inline;">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta previsión?');">Eliminar</button>
-                                        </form>                                      
+                                        <!-- Botón para eliminar la previsión con confirmación -->
+                                        <a href="{{ route('previsionesEliminar', $prevision->LINEA) }}" 
+                                           class="btn btn-danger" 
+                                           onclick="return confirmDelete()">Borrar</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -83,4 +73,10 @@
             @endif
         @endif
     </div>
+
+    <script>
+        function confirmDelete() {
+            return confirm("¿Estás seguro de que deseas borrar esta previsión?");
+        }
+    </script>
 @endsection
