@@ -52,8 +52,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/previsiones/crear', 'PrevisionController@crearPrevision')->name('previsionesCrear')->middleware('auth');
     // Para guardar una nueva previsión
     Route::post('/previsiones', 'PrevisionController@guardarPrevision')->name('previsionesGuardar')->middleware('auth');
-    // Para editar una previsión existente
-    Route::put('/previsiones/{linea}/editar', 'PrevisionController@editarPrevision')->name('previsionesEditar')->middleware('auth');
+    // Para Eliminar una previsión existente
+    Route::get('/previsiones/{linea}/editar', 'PrevisionController@borrarPrevision')->name('previsionesEliminar')->middleware('auth');
     // Para actualizar una previsión existente
     Route::put('/previsiones/{linea}', 'PrevisionController@actualizarPrevision')->name('previsionesActualizar')->middleware('auth');
     // Para eliminar una previsión
