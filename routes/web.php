@@ -4,21 +4,32 @@ use Illuminate\Support\Facades\Route;
 
 // Página de inicio
 Route::get('/', function () {
-    // (IMPORTANTE CAMBIAR CUANDO ESTÉ EN PRODUCCIÓN)
-//    if (Auth::check()) {
-//         // Si el usuario está autenticado, redirige a la vista del menú
-//         return redirect()->route('menu'); // Asegúrate de definir la ruta 'menu'
-//     }
-
-    // Si el usuario no está autenticado, muestra la vista de login (IMPORTANTE CAMBIAR CUANDO ESTÉ EN PRODUCCIÓN)
-    // return view('Auth/login');
-    return view('bienvenida');
+    return view('home');
 });
 
 // Otras rutas de la aplicación
+Route::get('sobre-nosotros', function () {
+    return view('sobre-nosotros');
+});
 Route::get('contacto', function () {
     return view('contacto');
 });
+
+//Textos legales
+Route::get('aviso-legal', function () {
+    return view('textosLegales.aviso-legal');
+});
+Route::get('politica-privacidad', function () {
+    return view('textosLegales.politica-privacidad');
+});
+Route::get('politica-cookies', function () {
+    return view('textosLegales.politica-cookies');
+});
+Route::get('terminos-condiciones', function () {
+    return view('textosLegales.terminos-condiciones');
+});
+
+
 
 // Rutas de autorización para el Usuario
 Auth::routes();
@@ -42,11 +53,10 @@ Route::middleware('auth')->group(function () {
     // Para guardar una nueva previsión
     Route::post('/previsiones', 'PrevisionController@guardarPrevision')->name('previsionesGuardar')->middleware('auth');
     // Para editar una previsión existente
-    Route::get('/previsiones/{linea}/editar', 'PrevisionController@editarPrevision')->name('previsionesEditar')->middleware('auth');
+    Route::put('/previsiones/{linea}/editar', 'PrevisionController@editarPrevision')->name('previsionesEditar')->middleware('auth');
     // Para actualizar una previsión existente
     Route::put('/previsiones/{linea}', 'PrevisionController@actualizarPrevision')->name('previsionesActualizar')->middleware('auth');
     // Para eliminar una previsión
-    Route::delete('/previsiones/{linea}', 'PrevisionController@eliminarPrevision')->name('previsionesEliminar')->middleware('auth');
 
 });    
 
