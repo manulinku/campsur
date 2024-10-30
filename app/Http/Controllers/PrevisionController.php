@@ -72,20 +72,20 @@ use Auth;
         return redirect()->route('previsionesCorte')->with('success', 'Previsión creada correctamente');
     }
 
-    // Editar previsión existente
-    public function editarPrevision($id)
-    {
-        $prevision = Prevision::findOrFail($id);
+    // // Editar previsión existente (NO SE USA)
+    // public function editarPrevision($id)
+    // {
+    //     $prevision = Prevision::findOrFail($id);
 
-        // Verificar si el proveedor autenticado es el propietario de la previsión
-        if ($prevision->COD_PROV !== auth()->user()->CODIGO) {
-            return redirect()->route('previsionesCorte')->with('error', 'No tienes permiso para editar esta previsión.');
-        }
+    //     // Verificar si el proveedor autenticado es el propietario de la previsión
+    //     if ($prevision->COD_PROV !== auth()->user()->CODIGO) {
+    //         return redirect()->route('previsionesCorte')->with('error', 'No tienes permiso para editar esta previsión.');
+    //     }
 
-        // Lógica para obtener los artículos y mostrar la vista de edición
-        $articulos = Articulo::all();
-        return view('previsiones.edit', compact('prevision', 'articulos'));
-    }
+    //     // Lógica para obtener los artículos y mostrar la vista de edición
+    //     $articulos = Articulo::all();
+    //     return view('previsiones.edit', compact('prevision', 'articulos'));
+    // }
 
 
 

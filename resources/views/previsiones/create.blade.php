@@ -22,7 +22,8 @@
             <!-- Campo para seleccionar la fecha -->
             <div class="form-group">
                 <label for="FECHA">Fecha de Corte:</label>
-                <input type="date" id="FECHA" name="FECHA" class="form-control" value="{{ old('FECHA') }}" required>
+                <input type="date" id="FECHA" name="FECHA" class="form-control" value="{{ old('FECHA') }}" required
+                    min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
             </div>
 
             <!-- Desplegable para seleccionar el artículo -->
