@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 // Página de inicio
 Route::get('/', function () {
-    return view('Auth/login');
+    return view('auth.login');
 });
 
 // Otras rutas de la aplicación
