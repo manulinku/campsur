@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 // Página de inicio
 Route::get('/', function () {
-    return view('home');
+    return view('Auth/login');
 });
 
 // Otras rutas de la aplicación
@@ -14,22 +14,6 @@ Route::get('sobre-nosotros', function () {
 Route::get('contacto', function () {
     return view('contacto');
 });
-
-//Textos legales
-Route::get('aviso-legal', function () {
-    return view('textosLegales.aviso-legal');
-});
-Route::get('politica-privacidad', function () {
-    return view('textosLegales.politica-privacidad');
-});
-Route::get('politica-cookies', function () {
-    return view('textosLegales.politica-cookies');
-});
-Route::get('terminos-condiciones', function () {
-    return view('textosLegales.terminos-condiciones');
-});
-
-
 
 // Rutas de autorización para el Usuario
 Auth::routes();

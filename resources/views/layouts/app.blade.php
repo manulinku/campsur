@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
+    <!-- Start cookieyes banner --> <script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/6d7dccda27faab05ad067ad6/script.js"></script> <!-- End cookieyes banner -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,7 +44,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: white !important;">
             <div class="container">
-                <a href="{{ url('/') }}" style="color:#046433">
+                <a href="{{ url('/menu') }}" style="color:#046433">
                     <img src="{{ asset('/images/logo.png') }}" alt="Logo" style="width: 60px;">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#app-navbar-collapse" aria-controls="app-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,6 +91,5 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-    @include('cookieConsent::index')
 </body>
 </html>
