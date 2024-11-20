@@ -18,7 +18,7 @@
                 <tbody>
                     @foreach($movimientos as $movimiento)
                         <tr>
-                            <td>{{ $movimiento->DESCRIPCION }}</td>
+                            <td>{{ $movimiento->DESCRIPCION_PADRE }}</td>
                             <td>{{ number_format($movimiento->TOTAL_ENTREGA, 0, ',', '.') }}</td>
                             <td>{{ number_format($movimiento->TOTAL_RETIRA, 0, ',', '.') }}</td>
                             <td>{{ number_format($movimiento->TOTAL_ENTREGA - $movimiento->TOTAL_RETIRA, 0, ',', '.') }}</td> {{-- Cálculo del Saldo --}}

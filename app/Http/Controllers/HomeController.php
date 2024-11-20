@@ -117,14 +117,24 @@ class HomeController extends Controller
 
     public function mostrarMovimientos($codigo_proveedor)
 {
+    // Obtener el proveedor logueado
     $proveedor = User::where('CODIGO', $codigo_proveedor)->first();
 
-    // Primero, agrupamos los datos de LIN_ENV_PROV para obtener los retiros y entregas
-    $movimientos = DB::table('LIN_ENV_PROV as lep')
+    // Obtener todos los proveedores relacionados
+    $proveedoresRelacionados = User::where('COD_UN', $proveedor->CODIGO)
+        ->orWhere('CODIGO', $proveedor->COD_UN)
+        ->pluck('CODIGO')
+        ->push($proveedor->CODIGO); // Aseguramos que el proveedor logueado también esté en la lista
+
+    // Obtener los movimientos de envases (TE = 'E')
+    $movimientosEnvases = DB::table('LIN_ENV_PROV as lep')
         ->select(
-            'lep.TE', // Agregamos TE aquí para usarlo en el mapeo
-            'lep.CODIGO', // Agregamos CODIGO aquí
-            DB::raw("CASE WHEN lep.TE = 'E' THEN e.DESCRIPCION ELSE p.DESCRIPCION END AS DESCRIPCION"),
+            'lep.TE',
+            DB::raw("CASE WHEN lep.TE = 'E' THEN e.COD_UN ELSE p.COD_UN END AS COD_UN"),
+            DB::raw("CASE 
+                        WHEN lep.TE = 'E' THEN e.DESCRIPCION 
+                        ELSE p.DESCRIPCION 
+                     END AS DESCRIPCION_PADRE"),
             DB::raw('SUM(COALESCE(lep.RETIRA, 0)) as TOTAL_RETIRA'),
             DB::raw('SUM(COALESCE(lep.ENTREGA, 0)) as TOTAL_ENTREGA')
         )
@@ -136,31 +146,114 @@ class HomeController extends Controller
             $join->on('lep.CODIGO', '=', 'p.CODIGO')
                 ->where('lep.TE', '=', 'P');
         })
-        // Unimos con ENVASES_PROV para obtener COD_PROV
         ->join('ENVASES_PROV as ep', 'lep.NUMERO', '=', 'ep.NUMERO')
-        ->where('ep.COD_PROV', $codigo_proveedor) // Filtrar por el proveedor
-        ->groupBy('lep.TE', 'lep.CODIGO', 'DESCRIPCION') // Aseguramos que agrupamos por TE y CODIGO
+        ->whereIn('ep.COD_PROV', $proveedoresRelacionados)
+        ->where('lep.TE', '=', 'E')  // Filtrar solo envases
+        ->groupBy('lep.TE', 'COD_UN', 'DESCRIPCION_PADRE')
         ->get();
 
-    // Ahora hacemos un segundo paso para obtener los datos de LIN_ALB_PROV
-    $movimientos->map(function ($item) use ($codigo_proveedor) {
-        // Hacemos la suma de bultos o palets según el tipo
-        $totalEntregaAdicional = DB::table('LIN_ALB_PROV as lap')
-            ->where(function ($query) use ($item) {
-                if ($item->TE === 'E') {
-                    $query->where('lap.COD_ENV', '=', $item->CODIGO);
-                } else if ($item->TE === 'P') {
-                    $query->where('lap.COD_PAL', '=', $item->CODIGO);
-                }
-            })
-            ->sum(DB::raw('CASE WHEN ' . ($item->TE === 'E' ? 'lap.BULTOS' : 'lap.PALETS') . ' IS NOT NULL THEN ' . ($item->TE === 'E' ? 'lap.BULTOS' : 'lap.PALETS') . ' ELSE 0 END'));
+    // Obtener los movimientos de palets (TE = 'P')
+    $movimientosPalets = DB::table('LIN_ENV_PROV as lep')
+        ->select(
+            'lep.TE',
+            DB::raw("CASE WHEN lep.TE = 'P' THEN p.COD_UN ELSE e.COD_UN END AS COD_UN"),
+            DB::raw("CASE 
+                        WHEN lep.TE = 'P' THEN p.DESCRIPCION 
+                        ELSE e.DESCRIPCION 
+                     END AS DESCRIPCION_PADRE"),
+            DB::raw('SUM(COALESCE(lep.RETIRA, 0)) as TOTAL_RETIRA'),
+            DB::raw('SUM(COALESCE(lep.ENTREGA, 0)) as TOTAL_ENTREGA')
+        )
+        ->leftJoin('ENVASES as e', function ($join) {
+            $join->on('lep.CODIGO', '=', 'e.CODIGO')
+                ->where('lep.TE', '=', 'E');
+        })
+        ->leftJoin('PALETS as p', function ($join) {
+            $join->on('lep.CODIGO', '=', 'p.CODIGO')
+                ->where('lep.TE', '=', 'P');
+        })
+        ->join('ENVASES_PROV as ep', 'lep.NUMERO', '=', 'ep.NUMERO')
+        ->whereIn('ep.COD_PROV', $proveedoresRelacionados)
+        ->where('lep.TE', '=', 'P')  // Filtrar solo palets
+        ->groupBy('lep.TE', 'COD_UN', 'DESCRIPCION_PADRE')
+        ->get();
 
-        $item->TOTAL_ENTREGA += $totalEntregaAdicional; // Sumar entrega adicional
-        return $item;
-    });
+    // Obtener los movimientos adicionales de entregas desde LIN_ALB_PROV para envases
+    $movimientosAdicionalesEnvases = DB::table('LIN_ALB_PROV as lap')
+        ->select(
+            DB::raw("'E' as TE"), // Tipo de envase
+            DB::raw("COALESCE(e.COD_UN, lap.COD_ENV) as COD_UN"), 
+            'ep.DESCRIPCION as DESCRIPCION_PADRE',
+            DB::raw('0 as TOTAL_RETIRA'), // No hay retiradas en este caso
+            DB::raw('SUM(COALESCE(lap.BULTOS, 0)) as TOTAL_ENTREGA')
+        )
+        ->leftJoin('ENVASES as e', 'lap.COD_ENV', '=', 'e.CODIGO')
+        ->leftJoin('ENVASES as ep', 'e.COD_UN', '=', 'ep.CODIGO')
+        ->whereIn('lap.NUMERO', function ($query) use ($proveedoresRelacionados) {
+            $query->select('NUMERO')
+                ->from('ALBARAN_PROV')
+                ->whereIn('COD_PROV', $proveedoresRelacionados);
+        })
+        ->groupBy('lap.COD_ENV', 'ep.DESCRIPCION', 'e.COD_UN')
+        ->get();
 
+    // Obtener los movimientos adicionales de entregas desde LIN_ALB_PROV para palets
+    $movimientosAdicionalesPalets = DB::table('LIN_ALB_PROV as lap')
+        ->select(
+            DB::raw("'P' as TE"), // Tipo de palet
+            DB::raw("COALESCE(p.COD_UN, lap.COD_PAL) as COD_UN"),
+            'pp.DESCRIPCION as DESCRIPCION_PADRE',
+            DB::raw('0 as TOTAL_RETIRA'),
+            DB::raw('SUM(COALESCE(lap.PALETS, 0)) as TOTAL_ENTREGA')
+        )
+        ->leftJoin('PALETS as p', 'lap.COD_PAL', '=', 'p.CODIGO')
+        ->leftJoin('PALETS as pp', 'p.COD_UN', '=', 'pp.CODIGO')
+        ->whereIn('lap.NUMERO', function ($query) use ($proveedoresRelacionados) {
+            $query->select('NUMERO')
+                ->from('ALBARAN_PROV')
+                ->whereIn('COD_PROV', $proveedoresRelacionados);
+        })
+        ->groupBy('lap.COD_PAL', 'pp.DESCRIPCION', 'p.COD_UN')
+        ->get();
+
+    // Combinar los movimientos de envases
+    $movimientosEnvasesCombinados = collect($movimientosEnvases)
+        ->merge($movimientosAdicionalesEnvases)
+        ->groupBy('COD_UN')
+        ->map(function ($items) {
+            return (object)[
+                'TE' => 'E',
+                'DESCRIPCION_PADRE' => $items[0]->DESCRIPCION_PADRE,
+                'TOTAL_RETIRA' => $items->sum('TOTAL_RETIRA'),
+                'TOTAL_ENTREGA' => $items->sum('TOTAL_ENTREGA'),
+            ];
+        })
+        ->values(); // Reindexar la colección
+
+    // Combinar los movimientos de palets
+    $movimientosPaletsCombinados = collect($movimientosPalets)
+        ->merge($movimientosAdicionalesPalets)
+        ->groupBy('COD_UN')
+        ->map(function ($items) {
+            return (object)[
+                'TE' => 'P',
+                'DESCRIPCION_PADRE' => $items[0]->DESCRIPCION_PADRE,
+                'TOTAL_RETIRA' => $items->sum('TOTAL_RETIRA'),
+                'TOTAL_ENTREGA' => $items->sum('TOTAL_ENTREGA'),
+            ];
+        })
+        ->values(); // Reindexar la colección
+
+    // Combinar los movimientos de envases y palets
+    $movimientos = $movimientosEnvasesCombinados->merge($movimientosPaletsCombinados);
+
+    // Retornar la vista con los movimientos combinados
     return view('movimientos_envase_palet', compact('movimientos', 'proveedor'));
 }
+
+
+
+
 
 
 
