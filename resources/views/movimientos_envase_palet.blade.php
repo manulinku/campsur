@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container my-4 p-4" style="color:black; background-color: white; border-radius: 1em;">
+<div class="container my-4 p-4" style="color:black; background-color: white; border-radius: 1em; position:relative;">
     {{-- Verificar si hay un mensaje de error --}}
     @if(isset($error))
         <div class="alert alert-danger">
@@ -9,7 +9,11 @@
         </div>
     @else
         {{-- Tabla para Movimientos de Envases y Palets --}}
-        <h2>Movimientos de Envases y Palets</h2>
+        <h2 style="margin-top: 3rem;">Movimientos de Envases y Palets</h2>
+        <a href="{{ route('menu') }}" class="btn btn-primary" style="position: absolute; top: 1rem; right: 1rem;">
+            <i class="fa-solid fa-arrow-rotate-left" style="margin-right: 0.5rem;"></i>
+            Volver
+        </a>
         @if(count($movimientos) > 0)
             <div class="table-responsive">
                 <table class="table table-hover">

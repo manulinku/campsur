@@ -1,12 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container my-4 p-4" style="color:black; background-color: white; border-radius: 1em;">
-        <h1>Mis Previsiones de Corte</h1>
+    <div class="container my-4 p-4" style="color:black; background-color: white; border-radius: 1em; position: relative;">
+        <h1 style="margin-top: 3rem;">Mis Previsiones de Corte</h1>
 
         <!-- Botón para añadir nueva previsión -->
         <a href="{{ route('previsionesCrear') }}" class="btn btn-primary mb-3">Añadir Previsión de Corte</a>
-
+        <a href="{{ route('menu') }}" class="btn btn-primary" style="position: absolute; top: 1rem; right: 1rem;">
+            <i class="fa-solid fa-arrow-rotate-left" style="margin-right: 0.5rem;"></i>
+            Volver
+        </a>
         @if(auth()->user()->role === 'admin')
             @foreach($previsiones as $codProv => $prev)
                 <h3>Proveedor: {{ $prev->first()->proveedor->nombre }} (Código: {{ $codProv }})</h3>

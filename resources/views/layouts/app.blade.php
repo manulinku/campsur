@@ -13,10 +13,10 @@
 
     <!-- Styles -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <style>
-        
         .navbar-brand {
             float: left;
             color: white !important;
@@ -28,9 +28,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-        .navbar, .nav {
-            margin-bottom: 0;
         }
         .dropdown-item:hover {
             color: white !important; /* Color al pasar el ratón por encima */
@@ -90,25 +87,6 @@
                 </div>
             </div>
         </nav>
-        @guest
-        <br>
-        @else
-        <nav style="background-color: white !important;">
-            <div class="container btn-lg w-100">
-                <ul class="nav justify-content-center">
-                    <li class="nav-item">
-                        <a class="nav-link" style="color:#046433 !important;" href="{{ route('albaranes') }}">Albaranes</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" style="color:#046433 !important;" href="{{ route('previsionesCorte') }}">Previsiones de Corte</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" style="color:#046433 !important;" href="{{ route('movimientos.envase.palet', Auth::user()->CODIGO) }}">Estado de Envases</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        @endguest
         @yield('content')
     </div>
 
