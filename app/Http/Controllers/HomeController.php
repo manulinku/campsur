@@ -36,13 +36,17 @@ class HomeController extends Controller
     {
         $usuario = Auth::user();
 
-        if ($usuario && $usuario->role === 'admin') {
-            $albaranes = Albaran::with('proveedor')->get();
-        } else {
-            $proveedor_codigo = $usuario->CODIGO;
-            $albaranes = Albaran::with('proveedor')->where('COD_PROV', $proveedor_codigo)->get();
-        }
-
+        
+        // Cuando el usuario tiene el rol admin (se quita a petición de Miguel)
+        // if ($usuario && $usuario->role === 'admin') {
+        //     $albaranes = Albaran::with('proveedor')->get();
+        // } else {
+        //     $proveedor_codigo = $usuario->CODIGO;
+        //     $albaranes = Albaran::with('proveedor')->where('COD_PROV', $proveedor_codigo)->get();
+        // }
+        
+        $proveedor_codigo = $usuario->CODIGO;
+        $albaranes = Albaran::with('proveedor')->where('COD_PROV', $proveedor_codigo)->get();
         $albaranesPorProveedor = $albaranes->groupBy('COD_PROV');
 
         return view('albaranes', [
