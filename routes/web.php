@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/albaranes', 'HomeController@albaranes')->name('albaranes');
     Route::get('/albaranes/{NUMERO}', 'HomeController@mostrarAlbaran')->name('mostrarAlbaran');
     Route::get('/movimientos/{codigo_proveedor}', 'HomeController@mostrarMovimientos')->name('movimientos.envase.palet');
-
+    Route::get('/modelo-347', 'HomeController@mostrarModelo347')->name('modelo-347');
     //En caso de que se quieran facturas
     // Route::get('/facturas', 'HomeController@facturas')->name('facturas');
     // Route::get('/facturas/{NUMERO}', 'HomeController@mostrarFactura')->name('mostrarFactura');

@@ -261,4 +261,37 @@ class HomeController extends Controller
         // Retornar la vista con los movimientos combinados
         return view('movimientos_envase_palet', compact('movimientos', 'proveedorAutenticado'));
     }
+
+    public function mostrarModelo347()
+{
+    $filePath = storage_path('app/public/modelo_347.csv'); // Ajusta la ruta según la ubicación de tu CSV
+    $nifCliente = Auth::user()->CIF; // Cambia esto según el nombre del campo del cliente logueado
+ 
+    // dd($nifCliente);
+
+    $datos = [];
+    if (($handle = fopen($filePath, 'r')) != false) {
+        $header = fgetcsv($handle, 1000, ';'); // Leer la cabecera del archivo CSV
+
+        while (($data = fgetcsv($handle, 1000, ';')) !== false) {
+            if ($data[0] == $nifCliente) { // Verifica si el NIF coincide
+                $datos[] = [
+                    'tipoiva' => $data[1],
+                    'titulo' => $data[2],
+                    'cpcli' => $data[3],
+                    'provincia' => $data[4],
+                    'importe' => $data[5],
+                    'q1' => $data[6],
+                    'q2' => $data[7],
+                    'q3' => $data[8],
+                    'q4' => $data[9],
+                ];
+            }
+        }
+
+        fclose($handle);
+    }
+
+    return view('modelo_347', compact('datos'));
+}
 }

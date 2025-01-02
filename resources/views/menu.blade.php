@@ -24,6 +24,9 @@
             <li class="nav-item mb-3">
                 <a href="{{ route('movimientos.envase.palet', $user->CODIGO) }}" class="btn btn-primary btn-lg w-100">Estado de Envases</a>
             </li>
+            <li class="nav-item mb-3">
+                <a href="{{ route('modelo-347') }}" class="btn btn-primary btn-lg w-100">Modelo 347 - {{ date('Y') - 1 }}</a>
+            </li>
                         
             {{-- <li class="nav-item mb-3">
                 <a href="{{ route('facturas') }}" class="btn btn-primary btn-lg w-100">Facturas</a>
