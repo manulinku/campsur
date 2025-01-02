@@ -8,6 +8,8 @@ use App\Factura;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\LinAlbProv;
+use App\Articulo;
 
 class HomeController extends Controller
 {
@@ -262,36 +264,74 @@ class HomeController extends Controller
         return view('movimientos_envase_palet', compact('movimientos', 'proveedorAutenticado'));
     }
 
-    public function mostrarModelo347()
-{
-    $filePath = storage_path('app/public/modelo_347.csv'); // Ajusta la ruta según la ubicación de tu CSV
-    $nifCliente = Auth::user()->CIF; // Cambia esto según el nombre del campo del cliente logueado
- 
-    // dd($nifCliente);
+    public function showProductGraph(Request $request)
+    {
+        $proveedorId = Auth::user()->CODIGO;
 
-    $datos = [];
-    if (($handle = fopen($filePath, 'r')) != false) {
-        $header = fgetcsv($handle, 1000, ';'); // Leer la cabecera del archivo CSV
+        // Obtener solo los productos relacionados con los albaranes del cliente logueado
+        $productos = Articulo::whereIn('CODIGO', function ($query) use ($proveedorId) {
+            $query->select('LIN_ALB_PROV.COD_ART')
+                ->from('LIN_ALB_PROV')
+                ->join('ALBARAN_PROV', 'LIN_ALB_PROV.NUMERO', '=', 'ALBARAN_PROV.NUMERO')
+                ->where('ALBARAN_PROV.COD_PROV', $proveedorId)
+                ->distinct();
+        })->pluck('DESCRIPCION', 'CODIGO');
 
-        while (($data = fgetcsv($handle, 1000, ';')) !== false) {
-            if ($data[0] == $nifCliente) { // Verifica si el NIF coincide
-                $datos[] = [
-                    'tipoiva' => $data[1],
-                    'titulo' => $data[2],
-                    'cpcli' => $data[3],
-                    'provincia' => $data[4],
-                    'importe' => $data[5],
-                    'q1' => $data[6],
-                    'q2' => $data[7],
-                    'q3' => $data[8],
-                    'q4' => $data[9],
-                ];
-            }
+        // Producto seleccionado (opcional)
+        $productoSeleccionado = $request->input('producto');
+
+        // Consultar datos solo si se selecciona un producto
+        $data = [];
+        if ($productoSeleccionado) {
+            $data = LinAlbProv::join('ALBARAN_PROV', 'LIN_ALB_PROV.NUMERO', '=', 'ALBARAN_PROV.NUMERO')
+                ->where('ALBARAN_PROV.COD_PROV', $proveedorId)
+                ->where('LIN_ALB_PROV.COD_ART', $productoSeleccionado)
+                ->selectRaw('MONTH(ALBARAN_PROV.FECHA) as mes, YEAR(ALBARAN_PROV.FECHA) as año, SUM(LIN_ALB_PROV.CANTIDAD) as total')
+                ->groupBy('mes', 'año')
+                ->orderBy('año')
+                ->orderBy('mes')
+                ->get()
+                ->groupBy('año')
+                ->map(function ($items) {
+                    $resultado = array_fill(1, 12, 0); // Asegura 12 meses con valores por defecto
+                    foreach ($items as $item) {
+                        $resultado[$item->mes] = $item->total;
+                    }
+                    return $resultado;
+                });
         }
 
-        fclose($handle);
+        return view('product_graph', compact('productos', 'data', 'productoSeleccionado'));
     }
 
-    return view('modelo_347', compact('datos'));
-}
+    public function mostrarModelo347()
+    {
+        $filePath = storage_path('app/public/modelo_347.csv'); // Ajusta la ruta según la ubicación de tu CSV
+        $nifCliente = Auth::user()->CIF; // Cambia esto según el nombre del campo del cliente logueado
+    
+        $datos = [];
+        if (($handle = fopen($filePath, 'r')) != false) {
+            $header = fgetcsv($handle, 1000, ';'); // Leer la cabecera del archivo CSV
+
+            while (($data = fgetcsv($handle, 1000, ';')) !== false) {
+                if ($data[0] == $nifCliente) { // Verifica si el NIF coincide
+                    $datos[] = [
+                        'tipoiva' => $data[1],
+                        'titulo' => $data[2],
+                        'cpcli' => $data[3],
+                        'provincia' => $data[4],
+                        'importe' => $data[5],
+                        'q1' => $data[6],
+                        'q2' => $data[7],
+                        'q3' => $data[8],
+                        'q4' => $data[9],
+                    ];
+                }
+            }
+
+            fclose($handle);
+        }
+
+        return view('modelo_347', compact('datos'));
+    }
 }
