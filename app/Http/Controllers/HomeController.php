@@ -72,6 +72,7 @@ class HomeController extends Controller
     {
         $usuario = Auth::user();
 
+        //Si en algún momento se ponen facturas hacer que campsur no vea todas, sino que vea solo las suyas como un proveedor más
         if ($usuario && $usuario->role === 'admin') {
             $facturas = Factura::with('proveedor')->get(); // Cambié Factura por FacturaProv
         } else {
@@ -268,7 +269,7 @@ class HomeController extends Controller
         return view('movimientos_envase_palet', compact('movimientos', 'proveedorAutenticado'));
     }
 
-    public function showProductGraph(Request $request)
+        public function showProductGraph(Request $request)
     {
         $proveedorId = Auth::user()->CODIGO;
 
@@ -286,27 +287,53 @@ class HomeController extends Controller
 
         // Consultar datos solo si se selecciona un producto
         $data = [];
+        $dataPrecioMedio = [];
+        $totales = ['kg' => 0, 'importe' => 0, 'precio_medio' => 0];
+
         if ($productoSeleccionado) {
-            $data = LinAlbProv::join('ALBARAN_PROV', 'LIN_ALB_PROV.NUMERO', '=', 'ALBARAN_PROV.NUMERO')
+            $query = LinAlbProv::join('ALBARAN_PROV', 'LIN_ALB_PROV.NUMERO', '=', 'ALBARAN_PROV.NUMERO')
                 ->where('ALBARAN_PROV.COD_PROV', $proveedorId)
                 ->where('LIN_ALB_PROV.COD_ART', $productoSeleccionado)
-                ->selectRaw('MONTH(ALBARAN_PROV.FECHA) as mes, YEAR(ALBARAN_PROV.FECHA) as año, SUM(LIN_ALB_PROV.CANTIDAD) as total')
+                ->selectRaw('MONTH(ALBARAN_PROV.FECHA) as mes, YEAR(ALBARAN_PROV.FECHA) as año, 
+                            SUM(LIN_ALB_PROV.CANTIDAD) as total_cantidad, 
+                            SUM(LIN_ALB_PROV.IMPORTE) as total_importe')
                 ->groupBy('mes', 'año')
                 ->orderBy('año')
                 ->orderBy('mes')
-                ->get()
-                ->groupBy('año')
-                ->map(function ($items) {
-                    $resultado = array_fill(1, 12, 0); // Asegura 12 meses con valores por defecto
-                    foreach ($items as $item) {
-                        $resultado[$item->mes] = $item->total;
-                    }
-                    return $resultado;
-                });
+                ->get();
+
+            // Procesar datos para el primer gráfico
+            $data = $query->groupBy('año')->map(function ($items) {
+                $resultado = array_fill(1, 12, 0); // Asegura 12 meses con valores por defecto
+                foreach ($items as $item) {
+                    $resultado[$item->mes] = $item->total_cantidad;
+                }
+                return $resultado;
+            });
+
+            // Procesar datos para el segundo gráfico (precio medio)
+            $dataPrecioMedio = $query->groupBy('año')->map(function ($items) {
+                $resultado = array_fill(1, 12, 0); // Asegura 12 meses con valores por defecto
+                foreach ($items as $item) {
+                    $resultado[$item->mes] = $item->total_cantidad > 0
+                        ? $item->total_importe / $item->total_cantidad
+                        : 0; // Calcular precio medio
+                }
+                return $resultado;
+            });
+
+            // Calcular totales (kg, importe, precio medio)
+            $totales['kg'] = $query->sum('total_cantidad');
+            $totales['importe'] = $query->sum('total_importe');
+            if ($totales['kg'] > 0) {
+                $totales['precio_medio'] = $totales['importe'] / $totales['kg'];
+            }
         }
 
-        return view('product_graph', compact('productos', 'data', 'productoSeleccionado'));
+        return view('product_graph', compact('productos', 'data', 'dataPrecioMedio', 'productoSeleccionado', 'totales'));
     }
+
+
 
     public function mostrarModelo347()
     {
