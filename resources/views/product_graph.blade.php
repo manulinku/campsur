@@ -210,6 +210,9 @@
                         <td style="padding: 10px; color: #34b572;">{{ number_format($totales['importe'], 2) }} €</td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    * El importe Total corresponde con el importe bruto, sin IVA, ni descuento ni retención 
+                </tfoot>
             </table>
         </div>
         
