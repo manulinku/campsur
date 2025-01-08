@@ -22,11 +22,11 @@ Route::middleware('auth')->group(function () {
 // Ruta para el dashboard o página de inicio después de login
     Route::get('/menu', 'HomeController@index')->name('menu');
     Route::get('/albaranes', 'HomeController@albaranes')->name('albaranes');
-    Route::get('/albaranes/{NUMERO}', 'HomeController@mostrarAlbaran')->name('mostrarAlbaran');
+    Route::get('/albaranes/{NUMERO}/{SERIE}', 'HomeController@mostrarAlbaran')->name('mostrarAlbaran');
     Route::get('/movimientos/{codigo_proveedor}', 'HomeController@mostrarMovimientos')->name('movimientos.envase.palet');
     Route::get('/product-graph', 'HomeController@showProductGraph')->name('product.graph');
     Route::get('/modelo-347', 'HomeController@mostrarModelo347')->name('modelo-347');
-    //En caso de que se quieran facturas
+    //En caso de que se quieran facturas #####-actualización 08/01/2025 si se quieren facturas hay que modificarlo para que coja la serie al igual que hace con los albaranes###
     // Route::get('/facturas', 'HomeController@facturas')->name('facturas');
     // Route::get('/facturas/{NUMERO}', 'HomeController@mostrarFactura')->name('mostrarFactura');
 

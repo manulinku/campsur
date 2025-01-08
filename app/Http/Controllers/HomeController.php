@@ -55,10 +55,16 @@ class HomeController extends Controller
         ]);
     }
 
-    public function mostrarAlbaran($NUMERO)
+    public function mostrarAlbaran($NUMERO, $SERIE)
     {
         $usuario = Auth::user();
-        $albaran = Albaran::with('proveedor')->findOrFail($NUMERO);
+        
+        // Busca el albarán usando los dos campos como filtro
+        $albaran = Albaran::with('proveedor')
+            ->where('NUMERO', $NUMERO)
+            ->where('SERIE', $SERIE)
+            ->firstOrFail();
+
         $lineas = $albaran->lineas;
 
         return view('detalle_albaran', [

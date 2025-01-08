@@ -31,7 +31,7 @@
                                 <td>{{ $albaran->NUMERO }}</td>
                                 <td>{{ $albaran->FECHA }}</td>
                                 <td>
-                                    <a href="{{ route('mostrarAlbaran', $albaran->NUMERO) }}" class="btn btn-primary btn-sm">Ver Detalles</a>
+                                    <a href="{{ route('mostrarAlbaran', ['NUMERO' => $albaran->NUMERO, 'SERIE' => $albaran->SERIE]) }}" class="btn btn-primary btn-sm">Ver Detalles</a>
                                 </td> <!-- Botón para ver detalles -->
                             </tr>
                         @endforeach
