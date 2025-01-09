@@ -46,7 +46,12 @@ class HomeController extends Controller
         // }
         
         $proveedor_codigo = $usuario->CODIGO;
-        $albaranes = Albaran::with('proveedor')->where('COD_PROV', $proveedor_codigo)->get();
+        $albaranes = Albaran::with('proveedor')
+        ->where('COD_PROV', $proveedor_codigo)
+        ->orderBy('FECHA', 'desc') // Ordenar por FECHA en orden ascendente
+        ->get();
+
+        // Agrupar los albaranes por proveedor
         $albaranesPorProveedor = $albaranes->groupBy('COD_PROV');
 
         return view('albaranes', [
