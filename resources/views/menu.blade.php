@@ -21,9 +21,9 @@
             <li class="nav-item mb-3">
                 <a href="{{ route('previsionesCorte') }}" class="btn btn-primary btn-lg w-100">Previsiones de Corte</a>
             </li>
-            {{-- <li class="nav-item mb-3">
+            <li class="nav-item mb-3">
                 <a href="{{ route('movimientos.envase.palet', $user->CODIGO) }}" class="btn btn-primary btn-lg w-100">Estado de Envases</a>
-            </li> --}}
+            </li>
             {{-- <li class="nav-item mb-3">
                 <a href="{{ route('product.graph') }}" class="btn btn-primary btn-lg w-100">Gráficas</a>
             </li> --}}
