@@ -15,18 +15,18 @@
                 <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Gestionar Clientes</a>
             </li>
             @endif
-            <li class="nav-item mb-3">
+            {{-- <li class="nav-item mb-3">
                 <a href="{{ route('albaranes') }}" class="btn btn-primary btn-lg w-100">Albaranes</a>
-            </li>
+            </li> --}}
             <li class="nav-item mb-3">
                 <a href="{{ route('previsionesCorte') }}" class="btn btn-primary btn-lg w-100">Previsiones de Corte</a>
             </li>
-            <li class="nav-item mb-3">
+            {{-- <li class="nav-item mb-3">
                 <a href="{{ route('movimientos.envase.palet', $user->CODIGO) }}" class="btn btn-primary btn-lg w-100">Estado de Envases</a>
             </li>
             <li class="nav-item mb-3">
                 <a href="{{ route('product.graph') }}" class="btn btn-primary btn-lg w-100">Gráficas</a>
-            </li>
+            </li> --}}
             <li class="nav-item mb-3">
                 <a href="{{ route('modelo-347') }}" class="btn btn-primary btn-lg w-100">Modelo 347 - {{ date('Y') - 1 }}</a>
             </li>
