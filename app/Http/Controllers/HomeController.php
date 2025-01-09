@@ -63,15 +63,25 @@ class HomeController extends Controller
     public function mostrarAlbaran($NUMERO, $SERIE)
     {
         $usuario = Auth::user();
-        
-        // Busca el albarán usando los dos campos como filtro
-        $albaran = Albaran::with('proveedor')
-            ->where('NUMERO', $NUMERO)
-            ->where('SERIE', $SERIE)
-            ->firstOrFail();
 
+        // Definir las series permitidas
+        $permitidas = ['155', '128', '40'];
+
+        // Buscar el albarán con el número y la serie específica
+        $albaran = Albaran::with(['proveedor', 'lineas' => function ($query) use ($NUMERO, $SERIE) {
+            // Filtrar las líneas del albarán por el número y la serie
+            $query->where('NUMERO', $NUMERO)
+                ->where('SERIE', $SERIE);  // Asegurarse de que las líneas sean de la serie correcta
+        }])
+        ->where('NUMERO', $NUMERO)
+        ->where('SERIE', $SERIE)
+        ->whereIn('SERIE', $permitidas)  // Filtrar las series permitidas
+        ->firstOrFail();
+
+        // Obtener las líneas del albarán
         $lineas = $albaran->lineas;
 
+        // Retornar la vista con los detalles
         return view('detalle_albaran', [
             'albaran' => $albaran,
             'lineas' => $lineas,
