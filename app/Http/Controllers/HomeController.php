@@ -303,8 +303,11 @@ class HomeController extends Controller
         $productos = Articulo::whereIn('CODIGO', function ($query) use ($proveedorId) {
             $query->select('LIN_ALB_PROV.COD_ART')
                 ->from('LIN_ALB_PROV')
-                ->join('ALBARAN_PROV', 'LIN_ALB_PROV.NUMERO', '=', 'ALBARAN_PROV.NUMERO')
-                ->where('ALBARAN_PROV.COD_PROV', $proveedorId)
+                ->join('ALBARAN_PROV as ap', function ($join) {
+                    $join->on('LIN_ALB_PROV.NUMERO', '=', 'ap.NUMERO')
+                        ->on('LIN_ALB_PROV.SERIE', '=', 'ap.SERIE');
+                })
+                ->where('ap.COD_PROV', $proveedorId)
                 ->distinct();
         })->pluck('DESCRIPCION', 'CODIGO');
 
@@ -317,10 +320,13 @@ class HomeController extends Controller
         $totales = ['kg' => 0, 'importe' => 0, 'precio_medio' => 0];
 
         if ($productoSeleccionado) {
-            $query = LinAlbProv::join('ALBARAN_PROV', 'LIN_ALB_PROV.NUMERO', '=', 'ALBARAN_PROV.NUMERO')
-                ->where('ALBARAN_PROV.COD_PROV', $proveedorId)
+            $query = LinAlbProv::join('ALBARAN_PROV as ap', function ($join) {
+                    $join->on('LIN_ALB_PROV.NUMERO', '=', 'ap.NUMERO')
+                        ->on('LIN_ALB_PROV.SERIE', '=', 'ap.SERIE');
+                })
+                ->where('ap.COD_PROV', $proveedorId)
                 ->where('LIN_ALB_PROV.COD_ART', $productoSeleccionado)
-                ->selectRaw('MONTH(ALBARAN_PROV.FECHA) as mes, YEAR(ALBARAN_PROV.FECHA) as año, 
+                ->selectRaw('MONTH(ap.FECHA) as mes, YEAR(ap.FECHA) as año, 
                             SUM(LIN_ALB_PROV.CANTIDAD) as total_cantidad, 
                             SUM(LIN_ALB_PROV.IMPORTE) as total_importe')
                 ->groupBy('mes', 'año')
