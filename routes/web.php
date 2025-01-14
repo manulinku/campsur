@@ -43,6 +43,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/previsiones/{linea}', 'PrevisionController@actualizarPrevision')->name('previsionesActualizar')->middleware('auth');
     // Para eliminar una previsión
 
+    //Rutas para las comunicaciones
+    Route::get('/notificaciones', 'NotificacionController@index')->name('notificaciones.index');
+    Route::get('/notificaciones/create', 'NotificacionController@create')->name('notificaciones.create');
+    Route::post('/notificaciones', 'NotificacionController@store')->name('notificaciones.store');
+    Route::patch('/notificaciones/{id}/read', 'NotificacionController@markAsRead')->name('notificaciones.read');
 });    
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

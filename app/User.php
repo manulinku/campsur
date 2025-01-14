@@ -67,6 +67,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Prevision::class, 'COD_PROV', 'CODIGO');
     }
-
-    // Resto del código del modelo...
+    public function notificaciones()
+    {
+        return $this->hasMany(Notificacion::class, 'user_id'); // Asegúrate de que 'user_id' sea la clave foránea correcta
+    }
 }

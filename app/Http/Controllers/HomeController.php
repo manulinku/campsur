@@ -19,18 +19,21 @@ class HomeController extends Controller
     }
 
     public function index()
-{
-    $user = Auth::user(); // Obtiene el usuario logueado
+    {
+        $user = Auth::user(); // Obtiene el usuario logueado
 
-    // Si el usuario tiene un rol de 'user', obtener el proveedor correspondiente
-    if ($user->role === 'user') {
-        $codigo_proveedor = $user->CODIGO; // Asigna el código del proveedor
-    } else {
-        $codigo_proveedor = null; // O puedes asignar un valor por defecto o null
+        // Si el usuario tiene un rol de 'user', obtener el proveedor correspondiente
+        if ($user->role === 'user') {
+            $codigo_proveedor = $user->CODIGO; // Asigna el código del proveedor
+        } else {
+            $codigo_proveedor = null; // O puedes asignar un valor por defecto o null
+        }
+
+        // Obtener las notificaciones no leídas del usuario logueado
+        $noLeidas = $user->notificaciones->where('visto', false)->count(); // Contar las no leídas
+
+        return view('menu', compact('codigo_proveedor', 'noLeidas'));
     }
-
-    return view('menu', compact('codigo_proveedor'));
-}
 
     public function albaranes()
     {

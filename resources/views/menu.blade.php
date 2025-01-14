@@ -6,15 +6,38 @@
     $user = Auth::user();
 @endphp
 
+@section('styles')
+<style>
+    /* Estilo del circulito en la esquina superior derecha */
+    .nav-item {
+        position: relative; /* Esto asegura que el contenedor esté bien posicionado, sin afectar la alineación */
+    }
+
+</style>
+@endsection
+
 <nav class="navbar">
     <div class="container">
         <ul class="navbar-nav flex-column d-flex justify-content-center align-items-stretch w-100">
             <a class="navbar-item mb-3 text-center" style="font-size: 2em; color:white"><b>CampSur</b></a>
             @if ($user && $user->role === 'admin')
-            <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Gestionar Clientes</a>
-            </li>
+                <li class="nav-item mb-3">
+                    <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Gestionar Clientes</a>
+                </li>
+                <li class="nav-item mb-3">
+                    <a href="{{ route('notificaciones.create') }}" class="btn btn-primary btn-lg w-100">Crear Notificaciones</a>
+                </li>
             @endif
+            <li class="nav-item mb-3">
+                <a href="{{ route('notificaciones.index') }}" class="btn btn-primary btn-lg w-100">
+                    Notificaciones
+                    @if($noLeidas > 0)
+                        <span class="badge">
+                            {{ $noLeidas }}
+                        </span>
+                    @endif
+                </a>
+            </li>
             <li class="nav-item mb-3">
                 <a href="{{ route('albaranes') }}" class="btn btn-primary btn-lg w-100">Albaranes</a>
             </li>
@@ -30,23 +53,8 @@
             <li class="nav-item mb-3">
                 <a href="{{ route('modelo-347') }}" class="btn btn-primary btn-lg w-100">Modelo 347 - {{ date('Y') - 1 }}</a>
             </li>
-                        
-            {{-- <li class="nav-item mb-3">
-                <a href="{{ route('facturas') }}" class="btn btn-primary btn-lg w-100">Facturas</a>
-            </li> --}}
-            {{-- <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Facturas Cargo</a>
-            </li> --}}
-            {{-- <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Pagos</a>
-            </li> --}}
-            {{-- <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Comunicaciones</a>
-            </li>
-            <li class="nav-item mb-3">
-                <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Notificaciones</a>
-            </li> --}}
         </ul>
     </div>
 </nav>
+
 @endsection
