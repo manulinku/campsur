@@ -19,7 +19,7 @@
                         <strong>{{ $notificacion->titulo }}</strong>
                         <p>{{ $notificacion->mensaje }}</p>
                         <small class="text-muted">
-                            Recibida el {{ \Carbon\Carbon::parse($notificacion->created_at)->format('d/m/Y H:i') }}
+                            Recibida el {{ \Carbon\Carbon::parse($notificacion->created_at)->setTimezone('Europe/Madrid')->format('d/m/Y H:i') }}
                         </small>
                     </div>
                     @if (!$notificacion->visto)

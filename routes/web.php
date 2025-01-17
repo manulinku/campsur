@@ -48,6 +48,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/notificaciones/create', 'NotificacionController@create')->name('notificaciones.create');
     Route::post('/notificaciones', 'NotificacionController@store')->name('notificaciones.store');
     Route::patch('/notificaciones/{id}/read', 'NotificacionController@markAsRead')->name('notificaciones.read');
+
+    //Rutas para los comunicados
+    Route::get('/comunicados', 'ComunicadoController@index')->name('comunicados.index');
+    Route::get('/comunicados/create', 'ComunicadoController@create')->name('comunicados.create');
+    Route::post('/comunicados', 'ComunicadoController@store')->name('comunicados.store');
+    Route::delete('comunicados/{id}', 'ComunicadoController@destroy')->name('comunicados.destroy');
+
 });    
 
 Route::middleware(['auth', 'role:admin'])->group(function () {

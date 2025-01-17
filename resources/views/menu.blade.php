@@ -21,11 +21,15 @@
         <ul class="navbar-nav flex-column d-flex justify-content-center align-items-stretch w-100">
             <a class="navbar-item mb-3 text-center" style="font-size: 2em; color:white"><b>CampSur</b></a>
             @if ($user && $user->role === 'admin')
-                <li class="nav-item mb-3">
+                {{-- Solo si se quiere poner algún día (Solo Administradores) --}}
+                {{-- <li class="nav-item mb-3">
                     <a href="{{ route('clientes.index') }}" class="btn btn-primary btn-lg w-100">Gestionar Clientes</a>
+                </li> --}}
+                <li class="nav-item mb-3">
+                    <a href="{{ route('notificaciones.create') }}" class="btn btn-primary btn-lg w-100" style="color:rgb(4, 100, 51; background-color:white">Crear Notificaciones</a>
                 </li>
                 <li class="nav-item mb-3">
-                    <a href="{{ route('notificaciones.create') }}" class="btn btn-primary btn-lg w-100">Crear Notificaciones</a>
+                    <a href="{{ route('comunicados.create') }}" class="btn btn-primary btn-lg w-100" style="color:rgb(4, 100, 51; background-color:white">Crear Comunicados</a>
                 </li>
             @endif
             <li class="nav-item mb-3">
@@ -37,6 +41,9 @@
                         </span>
                     @endif
                 </a>
+            </li>
+            <li class="nav-item mb-3">
+                <a href="{{ route('comunicados.index') }}" class="btn btn-primary btn-lg w-100">Comunicados</a>
             </li>
             <li class="nav-item mb-3">
                 <a href="{{ route('albaranes') }}" class="btn btn-primary btn-lg w-100">Albaranes</a>
