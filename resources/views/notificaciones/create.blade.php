@@ -3,7 +3,7 @@
 @section('content')
 <div class="container my-4 p-4" style="color:black; background-color: white; border-radius: 1em; position:relative;">
     <h1>Crear Notificación</h1>
-    <!-- Botón para volver a todos los albaranes con icono -->
+    <!-- Botón para volver al menú principal con icono -->
     <a href="{{ route('menu') }}" class="btn btn-primary" style="position: absolute; top: 1rem; right: 1rem;">
         <i class="fa-solid fa-arrow-rotate-left" style="margin-right: 0.5rem;"></i>
         Volver
@@ -25,7 +25,7 @@
         </div>
     @endif
 
-    <form action="{{ route('notificaciones.store') }}" method="POST" style="background-color: white; border-radius: 5px;">
+    <form action="{{ route('notificaciones.store') }}" method="POST" enctype="multipart/form-data" style="background-color: white; border-radius: 5px;">
         {{ csrf_field() }}
 
         <div class="form-group">
@@ -46,13 +46,18 @@
             <input type="hidden" id="selected_user_id" name="user_id" value="{{ old('user_id') }}">
         </div>
 
+        <!-- Campo para cargar imágenes -->
+        <div class="form-group">
+            <label for="imagenes">&nbsp;Imágenes</label>
+            <input type="file" name="imagenes[]" class="form-control" multiple>
+            <small class="form-text text-muted">(Imagen de máximo 2MB).</small>
+        </div>
+
         <button type="submit" class="btn btn-primary">&nbsp;Crear Notificación</button>
     </form>
 </div>
 
-<!-- Asegúrate de que este script esté incluido al final de la página -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
     $(document).ready(function () {
         $("#user_search").keyup(function () {
@@ -72,18 +77,12 @@
             }
         });
 
-        // Cuando el usuario haga clic en un resultado, seleccionamos el cliente
         $(document).on('click', '.autocomplete-item', function() {
             var clientName = $(this).text();
             var clientId = $(this).data('id');
 
-            // Poner el nombre del cliente en el campo de texto
             $("#user_search").val(clientName);
-
-            // Establecer el ID del cliente en el campo oculto
             $("#selected_user_id").val(clientId);
-
-            // Limpiar los resultados del autocompletado
             $("#autocomplete-results").empty();
         });
     });

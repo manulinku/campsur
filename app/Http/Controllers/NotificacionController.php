@@ -29,18 +29,40 @@ class NotificacionController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorizeAdmin();
-
         $request->validate([
-            'titulo' => 'required|max:255',
-            'mensaje' => 'required',
-            'user_id' => 'required|exists:PROVEEDORES,CODIGO',
+            'titulo' => 'required|string|max:255',
+            'mensaje' => 'required|string',
+            'imagenes' => 'nullable|array', // Aceptar imágenes
+            'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5120', // Validación de las imágenes
         ]);
 
-        Notificacion::create($request->all());
+        // Crear la notificación
+        $notificacion = Notificacion::create([
+            'titulo' => $request->titulo,
+            'mensaje' => $request->mensaje,
+            'user_id' => $request->user_id, // Asumiendo que el campo user_id es necesario
+        ]);
 
-        return redirect()->route('notificaciones.create')->with('success', 'Notificación creada exitosamente');
+        $imagenesRutas = [];
+
+        // Subir imágenes si existen
+        if ($request->hasFile('imagenes')) {
+            foreach ($request->file('imagenes') as $image) {
+                $imagePath = $image->store('notificaciones', 'public'); // Guardar la imagen
+                $imagenesRutas[] = $imagePath; // Agregar la ruta de la imagen al arreglo
+            }
+        }
+
+        // Guardar las rutas de las imágenes en la columna 'imagenes' de la tabla 'notificaciones'
+        if (!empty($imagenesRutas)) {
+            $notificacion->imagenes = json_encode($imagenesRutas); // Guardar como JSON
+            $notificacion->save();
+        }
+
+        return redirect()->route('notificaciones.index')->with('success', 'Notificación creada con éxito.');
     }
+
+
 
     public function index()
     {
