@@ -3,13 +3,15 @@
 // app/Http/Controllers/NotificacionController.php
 namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
+
 use App\Notificacion;
 use App\User;
 use Illuminate\Http\Request;
 
 class NotificacionController extends Controller
 {
-        public function create()
+    public function create()
     {
         $this->authorizeAdmin(); // Asegurarse de que el usuario sea admin
 
@@ -24,8 +26,6 @@ class NotificacionController extends Controller
         // Pasa los datos a la vista
         return view('notificaciones.create', compact('clientes', 'message'));
     }
-
-
 
     public function store(Request $request)
     {
@@ -56,6 +56,23 @@ class NotificacionController extends Controller
             $notificacion->update(['visto' => true]);
         }
         return redirect()->route('notificaciones.index');
+    }
+
+    public function autocomplete(Request $request)
+    {
+        // Busca los clientes por nombre que coincidan con el término proporcionado
+        $term = $request->get('term');
+        $clientes = User::where('role', 'user')
+                        ->where('NOMBRE', 'like', '%' . $term . '%')
+                        ->limit(10) // Limita la cantidad de resultados
+                        ->get();
+
+        $output = '';
+        foreach ($clientes as $cliente) {
+            $output .= '<div class="autocomplete-item" data-id="' . $cliente->CODIGO . '">' . $cliente->NOMBRE . '</div>';
+        }
+
+        return response()->json($output);
     }
 
     private function authorizeAdmin()

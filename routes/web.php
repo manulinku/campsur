@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
     //Rutas para las comunicaciones
     Route::get('/notificaciones', 'NotificacionController@index')->name('notificaciones.index');
     Route::get('/notificaciones/create', 'NotificacionController@create')->name('notificaciones.create');
+    Route::get('/clientes/autocomplete', 'NotificacionController@autocomplete')->name('clientes.autocomplete');
     Route::post('/notificaciones', 'NotificacionController@store')->name('notificaciones.store');
     Route::patch('/notificaciones/{id}/read', 'NotificacionController@markAsRead')->name('notificaciones.read');
 
