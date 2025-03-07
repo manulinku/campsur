@@ -211,7 +211,8 @@
                     </tr>
                 </tbody>
                 <tfoot>
-                    * El importe Total corresponde con el importe bruto, sin IVA, ni descuento ni retención 
+                    * El importe Total corresponde al importe bruto, sin IVA, descuento o retención.<br>
+                    * Los Kg que todavía no hayan sido facturados bajarán la media del precio.
                 </tfoot>
             </table>
         </div>
