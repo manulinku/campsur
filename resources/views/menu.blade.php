@@ -29,7 +29,7 @@
                     <a href="{{ route('notificaciones.create') }}" class="btn btn-primary btn-lg w-100" style="color:rgb(4, 100, 51; background-color:white">Crear Notificaciones</a>
                 </li>
                 <li class="nav-item mb-3">
-                    <a href="{{ route('comunicados.create') }}" class="btn btn-primary btn-lg w-100" style="color:rgb(4, 100, 51; background-color:white">Crear Comunicados</a>
+                    <a href="{{ route('comunicados.create') }}" class="btn btn-primary btn-lg w-100" style="color:rgb(4, 100, 51; background-color:white">Crear Comunicados (Difusión)</a>
                 </li>
             @endif
             <li class="nav-item mb-3">
