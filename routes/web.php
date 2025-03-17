@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/notificaciones/create', 'NotificacionController@create')->name('notificaciones.create');
     Route::get('/clientes/autocomplete', 'NotificacionController@autocomplete')->name('clientes.autocomplete');
     Route::post('/notificaciones', 'NotificacionController@store')->name('notificaciones.store');
+    Route::delete('notificaciones/{id}', 'NotificacionController@destroy')->name('notificaciones.destroy');
     Route::patch('/notificaciones/{id}/read', 'NotificacionController@markAsRead')->name('notificaciones.read');
 
     //Rutas para los comunicados

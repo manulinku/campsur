@@ -35,6 +35,10 @@
 
                     <small class="text-muted">
                         Enviado el {{ \Carbon\Carbon::parse($notificacion->created_at)->setTimezone('Europe/Madrid')->format('d/m/Y H:i') }}
+                        
+                        @if(auth()->user()->role === 'admin')
+                            a {{ optional($notificacion->user)->NOMBRE ?? 'Desconocido' }}
+                        @endif
                     </small>
                 </div>
 

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container my-4 p-4" style="color:black; background-color: white; border-radius: 1em; position:relative;">
-    <h1>Comunicados</h1>
+    <h1>Comunicados (Difusiones)</h1>
     <!-- Botón para volver al menú principal con icono -->
     <a href="{{ route('menu') }}" class="btn btn-primary" style="position: absolute; top: 1rem; right: 1rem;">
         <i class="fa-solid fa-arrow-rotate-left" style="margin-right: 0.5rem;"></i>

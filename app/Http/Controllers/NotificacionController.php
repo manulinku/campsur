@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 use App\Notificacion;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class NotificacionController extends Controller
 {
@@ -25,6 +26,30 @@ class NotificacionController extends Controller
 
         // Pasa los datos a la vista
         return view('notificaciones.create', compact('clientes', 'message'));
+    }
+
+    public function destroy($id)
+    {
+        // Verificar si el usuario es admin
+        $this->authorizeAdmin();
+
+        // Buscar la notificación por su ID
+        $notificacion = Notificacion::findOrFail($id);
+
+        // Eliminar las imágenes asociadas
+        $imagenes = json_decode($notificacion->imagenes, true);
+        if ($imagenes) {
+            foreach ($imagenes as $imagen) {
+                // Eliminar las imágenes de la carpeta de almacenamiento
+                Storage::disk('public')->delete($imagen);
+            }
+        }
+
+        // Eliminar la notificación
+        $notificacion->delete();
+
+        // Redirigir de nuevo con un mensaje de éxito
+        return redirect()->route('notificaciones.index')->with('success', 'Notificación eliminado con éxito.');
     }
 
     public function store(Request $request)
@@ -64,12 +89,23 @@ class NotificacionController extends Controller
 
 
 
-    public function index()
+        public function index()
     {
         $user = auth()->user();
-        $notificaciones = Notificacion::where('user_id', $user->CODIGO)->get();
+
+        if ($user->role === 'admin') {
+            // Si es admin, obtener todas las notificaciones y ordenarlas por usuario
+            $notificaciones = Notificacion::with('user') // Asegurar que tenga la relación con el usuario
+                ->orderBy('user_id', 'asc') // Ordenar por proveedor (usuario que la creó)
+                ->get();
+        } else {
+            // Si es un proveedor, solo mostrar sus notificaciones
+            $notificaciones = Notificacion::where('user_id', $user->CODIGO)->get();
+        }
+
         return view('notificaciones.index', compact('notificaciones'));
     }
+
 
     public function markAsRead($id)
     {

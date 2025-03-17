@@ -43,7 +43,7 @@
                 </a>
             </li>
             <li class="nav-item mb-3">
-                <a href="{{ route('comunicados.index') }}" class="btn btn-primary btn-lg w-100">Comunicados</a>
+                <a href="{{ route('comunicados.index') }}" class="btn btn-primary btn-lg w-100">Comunicados (Difusión)</a>
             </li>
             <li class="nav-item mb-3">
                 <a href="{{ route('albaranes') }}" class="btn btn-primary btn-lg w-100">Albaranes</a>
