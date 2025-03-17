@@ -42,6 +42,16 @@
                     </small>
                 </div>
 
+                @if(auth()->user()->role !== 'admin')
+                    @if (!$notificacion->visto)
+                            <form action="{{ route('notificaciones.read', $notificacion->id) }}" method="POST">
+                                {{ csrf_field() }} <!-- Usando csrf_field() en lugar de @csrf -->
+                                {{ method_field('PATCH') }} <!-- Usando method_field() en lugar de @method -->
+                                <button type="submit" class="btn btn-sm btn-success">Marcar como leída</button>
+                            </form>
+                    @endif
+                @endif
+
                 @if(auth()->user()->role === 'admin')
                     <form action="{{ url('notificaciones/'.$notificacion->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta notificación?')">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
